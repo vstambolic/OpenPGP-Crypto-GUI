@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<StackPane styleClass="page" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.controllers.KeyManagementController">
+    <children>
+        <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="488.0" prefWidth="900.0" styleClass="page" StackPane.alignment="CENTER">
+            <children>
+                <HBox>
+                    <children>
+                        <Label prefHeight="77.0" prefWidth="357.0" text="Key Management">
+                            <styleClass>
+                                <String fx:value="header" />
+                                <String fx:value="keyManagement-subheader" />
+                            </styleClass>
+                            <font>
+                                <Font size="36.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </HBox>
+                <HBox prefHeight="29.0" prefWidth="841.0" />
+            <HBox maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="307.0" prefWidth="841.0">
+               <children>
+                  <VBox prefHeight="232.0" prefWidth="420.0">
+                     <children>
+                        <Label prefHeight="40.0" prefWidth="475.0" text="Public Key Ring">
+                           <VBox.margin>
+                              <Insets bottom="20.0" />
+                           </VBox.margin>
+                           <font>
+                              <Font size="27.0" />
+                           </font>
+                           <styleClass>
+                              <String fx:value="text" />
+                              <String fx:value="keyManagement-subheader" />
+                           </styleClass>
+                        </Label>
+                        <TableView fx:id="publicKeyTable" prefHeight="159.0" prefWidth="445.0">
+                           <columns>
+                              <TableColumn fx:id="publicKeyTableUserCol" editable="false" prefWidth="75.0" text="user" />
+                              <TableColumn fx:id="publicKeyTableEmailCol" editable="false" prefWidth="75.0" text="e-mail" />
+                              <TableColumn fx:id="publicKeyTableFingerprintCol" editable="false" prefWidth="75.0" text="fingerprint" />
+                           </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
+                        </TableView>
+                        <HBox prefHeight="86.0" prefWidth="400.0">
+                           <children>
+                              <ButtonBar prefHeight="60.0" prefWidth="400.0">
+                                <buttons>
+                                  <Button mnemonicParsing="false" onAction="#showPublicKey" styleClass="button-keyManagement" text="Show" />
+                                    <Button layoutX="335.0" layoutY="48.0" mnemonicParsing="false" onAction="#deletePublicKey" styleClass="button-keyManagement" text="Delete" />
+                                    <Button layoutX="335.0" layoutY="48.0" mnemonicParsing="false" onAction="#exportPublicKey" styleClass="button-keyManagement" text="Export" />
+                                    <Button layoutX="335.0" layoutY="48.0" mnemonicParsing="false" onAction="#importPublicKey" styleClass="button-keyManagement" text="Import" />
+                                </buttons>
+                              </ButtonBar>
+                           </children>
+                        </HBox>
+                     </children>
+                     <padding>
+                        <Insets right="20.0" />
+                     </padding>
+                  </VBox>
+                  <VBox layoutX="10.0" layoutY="10.0" prefHeight="232.0" prefWidth="420.0">
+                     <children>
+                        <Label prefHeight="40.0" prefWidth="438.0" text="Secret Key Ring">
+                           <VBox.margin>
+                              <Insets bottom="20.0" />
+                           </VBox.margin>
+                           <font>
+                              <Font size="27.0" />
+                           </font>
+                           <styleClass>
+                              <String fx:value="text" />
+                              <String fx:value="keyManagement-subheader" />
+                           </styleClass>
+                        </Label>
+                        <TableView fx:id="secretKeyTable" prefHeight="159.0" prefWidth="445.0">
+                           <columns>
+                              <TableColumn fx:id="secretKeyTableUserCol" editable="false" prefWidth="75.0" text="username" />
+                              <TableColumn fx:id="secretKeyTableEmailCol" editable="false" prefWidth="75.0" text="e-mail" />
+                              <TableColumn fx:id="secretKeyTableFingerprintCol" editable="false" prefWidth="75.0" text="fingerprint" />
+                           </columns>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
+                        </TableView>
+                        <HBox prefHeight="86.0" prefWidth="400.0">
+                           <children>
+                              <ButtonBar prefHeight="60.0" prefWidth="400.0">
+                                 <buttons>
+                                    <Button mnemonicParsing="false" onAction="#showSecretKey" styleClass="button-keyManagement" text="Show" />
+                                    <Button layoutX="335.0" layoutY="48.0" mnemonicParsing="false" onAction="#deleteSecretKey" styleClass="button-keyManagement" text="Delete" />
+                                    <Button layoutX="335.0" layoutY="48.0" mnemonicParsing="false" onAction="#exportSecretKey" styleClass="button-keyManagement" text="Export" />
+                                    <Button layoutX="335.0" layoutY="48.0" mnemonicParsing="false" onAction="#importSecretKey" styleClass="button-keyManagement" text="Import" />
+                                 </buttons>
+                              </ButtonBar>
+                           </children>
+                        </HBox>
+                     </children>
+                     <padding>
+                        <Insets left="20.0" />
+                     </padding>
+                  </VBox>
+               </children>
+            </HBox>
+            <Label onMouseClicked="#generateNewKeyPair" prefHeight="35.0" prefWidth="253.0" styleClass="hyperlink" text="Generate New Key Pair" underline="true">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            </children>
+         <padding>
+            <Insets left="30.0" right="30.0" />
+         </padding>
+        </VBox>
+    </children>
+</StackPane>

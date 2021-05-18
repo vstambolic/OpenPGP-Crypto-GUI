@@ -1,0 +1,257 @@
+.page {
+    -fx-background-color:black;
+    -fx-text-inner-color:white;
+}
+.welcome {
+    -fx-text-fill: #3278E8;
+}
+.text {
+    -fx-text-fill: white;
+}
+
+.menu-button {
+
+    -fx-background-radius:  50%;
+    -fx-border-radius:  50%;
+
+    -fx-border-width: 5px;
+    -fx-background-color: black;
+    -fx-cursor: hand;
+
+}
+#menu-button-encrypt {
+    -fx-border-color: #3278E8;
+    -fx-effect: dropshadow(three-pass-box, rgba(185, 211, 243, 0.78), 10, 0, 0, 0);
+}
+
+#menu-button-keys {
+    -fx-border-color: #52A9A4;
+    -fx-effect: dropshadow(three-pass-box, rgba(185, 243, 220, 0.78), 10, 0, 0, 0);
+}
+#menu-button-decrypt {
+    -fx-border-color: #8E0E0E;
+    -fx-effect: dropshadow(three-pass-box, rgba(243, 185, 185, 0.78), 10, 0, 0, 0);
+}
+.header {
+    -fx-font-size: 36px;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(three-pass-box, rgba(255, 255, 255, 0.78),2, 0, 0, 0);
+}
+
+.encryptOptionBlock {
+    -fx-border-style: hidden solid hidden hidden;
+    -fx-border-color: #3278E8;
+    -fx-border-width: 2px;
+}
+
+.encrypt-subheader {
+    -fx-border-style: hidden  hidden solid hidden;
+    -fx-border-color: #3278E8;
+    -fx-border-width: 1px;
+}
+
+
+/*** ENCRYPT STYLE ***/
+
+.check-box-encrypt .box{
+    -fx-border-color: #3278E8;
+    -fx-background-color: black;
+}
+
+.check-box-encrypt:selected .mark{
+    -fx-background-color:  white;
+    -fx-mark-highlight-color:#5a61af;
+}
+
+.radio-button {
+    -fx-text-fill: white;
+}
+.radio-button-encrypt .radio{
+    -fx-border-color     : #3278E8;
+    -fx-background-color : black ;
+    -fx-border-radius    : 50% ;
+    -fx-text-fill:#3278E8;
+}
+.radio-button-encrypt:selected .radio .dot {
+    -fx-background-color:   white;
+    -fx-background-insets: 0;
+}
+.text-field-encrypt {
+    -fx-background-color:  black;
+    -fx-border-color     : #3278E8;
+}
+.list-view {
+    -fx-background-color:  black;
+    -fx-border-color     : #3278E8;
+}
+
+.button-encrypt {
+    -fx-background-color:
+            black;
+
+    -fx-background-insets: 0,1,2;
+    -fx-border-color: #3278E8;
+
+    -fx-text-fill: white;
+    -fx-cursor: hand;
+}
+
+.button-encrypt:hover {
+    -fx-text-fill: black;
+    -fx-background-color:  #3278E8;
+}
+
+/*** KEY MANAGEMENT STYLE ***/
+.keyManagement-subheader {
+    -fx-border-style: hidden  hidden solid hidden;
+    -fx-border-color: #52A9A4;
+    -fx-border-width: 1px;
+}
+
+.button-keyManagement {
+    -fx-background-color: black;
+
+    -fx-background-insets: 0,1,2;
+    -fx-border-color: #52A9A4;
+
+    -fx-text-fill: white;
+    -fx-cursor: hand;
+}
+.button-keyManagement:hover {
+    -fx-text-fill: black;
+    -fx-background-color: #52A9A4;
+}
+
+.check-box-keyManagement .box{
+    -fx-border-color:#52A9A4;
+    -fx-background-color: black;
+}
+
+.check-box-keyManagement:selected .mark{
+    -fx-background-color:#52A9A4;
+    -fx-mark-highlight-color: #97d4d0;
+}
+
+.
+.hyperlink {    -fx-text-fill: #52A9A4;
+
+}
+.hyperlink:hover {
+    -fx-text-fill: white;
+}
+
+
+
+
+.table-view {
+    -fx-background-color: transparent;
+    -fx-padding: 0em;
+    -fx-border-color:  #52A9A4;
+
+}
+.table-view > .placeholder  > .label{
+    -fx-text-fill: rgba(82, 169, 164, 0.4);
+
+}
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-border-color: #52A9A4;
+
+}
+.table-view .column-header-background{
+    -fx-background-color:transparent;
+}
+.table-view .column-header-background .label{
+    /*-fx-background-color: transparent;*/
+    -fx-text-fill: white;
+    -fx-font-weight: normal;
+}
+
+
+.table-view .table-cell{
+    -fx-text-fill: white;
+    -fx-border-color: #52A9A4;
+    -fx-padding: 0em;
+
+}
+
+.table-row-cell{
+    -fx-padding: 0em;    -fx-text-fill: white;
+    -fx-background-color: transparent;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #52A9A4;
+    -fx-background-insets: 0;
+    -fx-text-fill: black;
+}
+
+
+
+
+
+
+
+
+
+.table-view > .virtual-flow > .scroll-bar:vertical,
+.table-view > .virtual-flow > .scroll-bar:vertical > .track,
+.table-view > .virtual-flow > .scroll-bar:vertical > .track-background,
+.table-view > .virtual-flow > .scroll-bar:horizontal,
+.table-view > .virtual-flow > .scroll-bar:horizontal > .track,
+.table-view > .virtual-flow > .scroll-bar:horizontal > .track-background,
+.table-view > .virtual-flow > .scroll-bar > .increment-button,
+.table-view > .virtual-flow > .scroll-bar > .decrement-button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 0em;
+
+}
+.table-view > .virtual-flow > .scroll-bar > .increment-button > .increment-arrow,
+.table-view > .virtual-flow > .scroll-bar > .decrement-button > .decrement-arrow,
+.table-view > .virtual-flow > .scroll-bar:horizontal .thumb,
+.table-view > .virtual-flow > .scroll-bar:vertical .thumb {
+    -fx-background-color:  #52A9A4;
+    -fx-background-radius: 5em;
+}
+{
+    -fx-background-color:  transparent;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.check-box-decrypt .box{
+    -fx-border-color: #8E0E0E;
+    -fx-background-color: black;
+}
+
+.check-box-decrypt:selected .mark{
+    -fx-background-color: #8E0E0E;
+    -fx-mark-highlight-color: #b45d5d;
+}
+
+
