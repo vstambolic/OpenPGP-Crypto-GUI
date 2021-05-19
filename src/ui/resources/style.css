@@ -9,6 +9,10 @@
     -fx-text-fill: white;
 }
 
+.back-button {
+    -fx-background-color: transparent;
+}
+
 .menu-button {
 
     -fx-background-radius:  50%;
@@ -133,8 +137,8 @@
 }
 
 .
-.hyperlink {    -fx-text-fill: #52A9A4;
-
+.hyperlink {
+    -fx-text-fill: #52A9A4;
 }
 .hyperlink:hover {
     -fx-text-fill: white;
@@ -186,14 +190,6 @@
     -fx-text-fill: black;
 }
 
-
-
-
-
-
-
-
-
 .table-view > .virtual-flow > .scroll-bar:vertical,
 .table-view > .virtual-flow > .scroll-bar:vertical > .track,
 .table-view > .virtual-flow > .scroll-bar:vertical > .track-background,
@@ -216,10 +212,24 @@
 {
     -fx-background-color:  transparent;
 }
+.text-field-keyManagement, .list-view-keyManagement {
+    -fx-background-color:  black;
+    -fx-border-color     : #52A9A4;
+}
 
 
+#generateKeysDialog .button {
+    -fx-background-color:black;
+    -fx-text-fill:white;
+    -fx-cursor:hand;
+    -fx-border-color: #52A9A4;
+}
 
-
+#generateKeysDialog .button:hover {
+    -fx-background-color: #52A9A4;
+    -fx-text-fill:black;
+    -fx-cursor:hand;
+}
 
 
 

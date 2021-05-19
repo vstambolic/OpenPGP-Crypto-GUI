@@ -16,8 +16,8 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("resources\\home.fxml"));
-//        Parent root = FXMLLoader.load(getClass().getResource("resources\\keyManagementPage.fxml"));
+//        Parent root = FXMLLoader.load(getClass().getResource("resources\\home.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("resources\\keyManagementPage.fxml"));
         primaryStage.setTitle("OpenPGP Crypto GUI");
         Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("resources\\style.css").toExternalForm());

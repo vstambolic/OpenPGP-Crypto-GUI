@@ -11,7 +11,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import ui.utils.UIUtils;
 
 public class KeyManagementController {
 
@@ -34,6 +37,9 @@ public class KeyManagementController {
     @FXML
     private TableColumn<Shit, String> secretKeyTableFingerprintCol;
 
+
+    @FXML
+    private ImageView imageViewBack;
 
     @FXML
     private void deletePublicKey(ActionEvent event) {
@@ -65,6 +71,7 @@ public class KeyManagementController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        dp.getStylesheets().add(getClass().getResource("..\\resources\\style.css").toExternalForm());
 
         GenerateKeysController controller = loader.getController();
 
@@ -101,8 +108,17 @@ public class KeyManagementController {
     private void showSecretKey(ActionEvent event) {
     }
 
+
+    @FXML
+    private void backAction(ActionEvent event) {
+        UIUtils.getInstance().switchPages("..\\resources\\home.fxml");
+
+    }
+
     @FXML
     private void initialize() {
+        Image mo = new Image(getClass().getResource("..\\resources\\icons\\back.png").toExternalForm());
+//        imageViewBack.setImage(new Image(getClass().getResource("..\\resources\\icons\\back.png").toExternalForm()));
         initTables();
 //
 //        Shit shit = new Shit();
