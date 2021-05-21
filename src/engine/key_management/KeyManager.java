@@ -29,6 +29,7 @@ import java.util.*;
 
 
 public class KeyManager {
+
     // Preprocess -------------------------------------------------
 
     // Key ring file paths
@@ -46,6 +47,8 @@ public class KeyManager {
         Security.addProvider(new BouncyCastleProvider());
         loadKeyRings();
     }
+    // Make constructor private
+    private KeyManager(){}
 
     // Load key rings from files
     private static void loadKeyRings() {
@@ -188,7 +191,6 @@ public class KeyManager {
         // Generate secretKeyEncryptor
         PBESecretKeyEncryptor secretKeyEncryptor = (user.getPassphrase().length() == 0 ?
                 null : new JcePBESecretKeyEncryptorBuilder(PGPEncryptedData.CAST5, sha1DigestCalculator).setProvider("BC").build(user.getPassphrase().toCharArray()));
-        // CAST5 is more widely supported.
         // CAST5 is more widely supported.
         // Create PGPKeyRingGenerator
         PGPKeyRingGenerator keyRingGenerator = new PGPKeyRingGenerator(

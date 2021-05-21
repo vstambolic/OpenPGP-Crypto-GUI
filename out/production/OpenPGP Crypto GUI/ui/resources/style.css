@@ -146,7 +146,7 @@
 }
 
 .button-encrypt {
-    -fx-background-color:black;
+    -fx-background-color:transparent;
     -fx-background-insets: 0,1,2;
     -fx-border-color: #3278E8;
     -fx-text-fill: white;
@@ -157,6 +157,12 @@
     -fx-text-fill: #3278E8;
 }
 
+#encrypt-sign-button {
+    -fx-text-fill: #3278E8;
+}
+#encrypt-sign-button:hover {
+    -fx-text-fill: white;
+}
 /*** KEY MANAGEMENT STYLE ***/
 .keyManagement-subheader {
     -fx-border-style: hidden  hidden solid hidden;
@@ -166,7 +172,6 @@
 
 .button-keyManagement {
     -fx-background-color: black;
-
     -fx-background-insets: 0,1,2;
     -fx-border-color: #52A9A4;
 
@@ -320,11 +325,26 @@
 
 
 
+/**- DECRYPT/VERIFY STYLE ***/
 
 
 
+.decryptVerify-subheader {
+    -fx-border-style: hidden  hidden solid hidden;
+    -fx-border-color: #8E0E0E;
+    -fx-border-width: 1px;
+}
 
-
+.decryptVerify-button {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0,1,2;
+    -fx-border-color: #8E0E0E;
+    -fx-text-fill: white;
+    -fx-cursor: hand;
+}
+.decryptVerify-button:hover {
+-fx-text-fill: #8E0E0E;
+}
 
 .check-box-decrypt .box{
     -fx-border-color: #8E0E0E;

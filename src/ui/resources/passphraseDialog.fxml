@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ButtonType?>
+<?import javafx.scene.control.DialogPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<DialogPane id="generateKeysDialog" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="175.0" prefWidth="265.0" styleClass="page" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.controllers.PassphraseDialogController">
+    <buttonTypes>
+        <ButtonType fx:constant="OK" />
+        <ButtonType fx:constant="CANCEL" />
+    </buttonTypes>
+   <padding>
+      <Insets top="20.0" />
+   </padding>
+   <header>
+      <Label fx:id="label" prefHeight="41.0" prefWidth="265.0" styleClass="text" text="Enter the passphrase to delete the key." wrapText="true">
+         <font>
+            <Font size="14.0" />
+         </font>
+         <padding>
+            <Insets left="30.0" right="15.0" />
+         </padding>
+      </Label>
+   </header>
+   <content>
+        <GridPane hgap="20.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="61.0" prefWidth="224.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="204.1008566110269" minWidth="10.0" prefWidth="72.60507056251967" />
+                <ColumnConstraints fillWidth="false" halignment="LEFT" hgrow="NEVER" maxWidth="267.83198127452977" minWidth="10.0" prefWidth="112.94114197695404" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            </rowConstraints>
+            <children>
+                <Label prefHeight="60.0" prefWidth="183.0" styleClass="text" text="Passphrase:" wrapText="true">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Label>
+                <PasswordField fx:id="passphraseField" prefHeight="31.0" prefWidth="123.0" styleClass="text-field-keyManagement" GridPane.columnIndex="1">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </PasswordField>
+            </children>
+            <padding>
+                <Insets left="30.0" right="15.0" top="10.0" />
+            </padding>
+        </GridPane>
+   </content>
+</DialogPane>

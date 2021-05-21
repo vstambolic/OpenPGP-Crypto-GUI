@@ -11,8 +11,8 @@
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -23,7 +23,7 @@
          <children>
             <HBox>
                <children>
-                  <Label minHeight="-Infinity" minWidth="-Infinity" prefHeight="77.0" prefWidth="342.0" text="Encrypt/Sign files">
+                  <Label minHeight="-Infinity" minWidth="-Infinity" prefHeight="77.0" prefWidth="342.0" text="Encrypt/Sign Files">
                      <styleClass>
                         <String fx:value="header" />
                         <String fx:value="encrypt-subheader" />
@@ -47,9 +47,9 @@
                </padding>
             </HBox>
             <HBox prefHeight="56.0" prefWidth="900.0" />
-            <HBox prefHeight="256.0" prefWidth="900.0">
+            <HBox prefHeight="264.0" prefWidth="900.0">
                <children>
-                  <VBox prefHeight="311.0" prefWidth="225.0" styleClass="encryptOptionBlock">
+                  <VBox prefHeight="320.0" prefWidth="225.0" styleClass="encryptOptionBlock">
                      <children>
                         <HBox prefHeight="52.0" prefWidth="225.0" styleClass="encrypt-subheader">
                            <children>
@@ -58,39 +58,38 @@
                                     <Font size="20.0" />
                                  </font>
                               </Label>
-                              <CheckBox fx:id="encryptCheckbox" mnemonicParsing="false" prefHeight="52.0" prefWidth="10.0" styleClass="check-box-encrypt" />
+                              <CheckBox fx:id="encryptCheckbox" mnemonicParsing="false" onAction="#encryptCheckboxAction" prefHeight="52.0" prefWidth="10.0" selected="true" styleClass="check-box-encrypt" />
                            </children>
                            <padding>
                               <Insets bottom="10.0" />
                            </padding>
                         </HBox>
-                        <Label prefHeight="31.0" prefWidth="225.0" styleClass="text" text="Choose Algorithm:" />
-                        <RadioButton mnemonicParsing="false" prefHeight="37.0" prefWidth="225.0" selected="true" styleClass="radio-button-encrypt" text="Triple-DES">
-                           <padding>
-                              <Insets left="30.0" />
-                           </padding>
-                           <toggleGroup>
-                              <ToggleGroup fx:id="symmetricAlgorithm" />
-                           </toggleGroup>
-                        </RadioButton>
-                        <RadioButton mnemonicParsing="false" prefHeight="27.0" prefWidth="225.0" styleClass="radio-button-encrypt" text="AES" toggleGroup="$symmetricAlgorithm">
-                           <padding>
-                              <Insets left="30.0" />
-                           </padding>
-                        </RadioButton>
-                        <VBox prefHeight="0.0" prefWidth="165.0" />
-                        <Label prefHeight="31.0" prefWidth="225.0" styleClass="text" text="Choose Public Key:">
-                           <VBox.margin>
-                              <Insets top="10.0" />
-                           </VBox.margin>
-                        </Label>
-                        <ComboBox fx:id="publicKeyComboBox" prefHeight="39.0" prefWidth="165.0" styleClass="combo-box-encrypt" visibleRowCount="3" />
+                        <Pane fx:id="encryptOptionsPane" prefHeight="209.0" prefWidth="165.0">
+                           <children>
+                              <Label prefHeight="31.0" prefWidth="165.0" styleClass="text" text="Choose Algorithm:" />
+                              <RadioButton layoutY="31.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="165.0" selected="true" styleClass="radio-button-encrypt" text="Triple-DES">
+                                 <padding>
+                                    <Insets left="30.0" />
+                                 </padding>
+                                 <toggleGroup>
+                                    <ToggleGroup fx:id="symmetricAlgorithm" />
+                                 </toggleGroup>
+                              </RadioButton>
+                              <RadioButton layoutY="69.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="165.0" styleClass="radio-button-encrypt" text="CAST5" toggleGroup="$symmetricAlgorithm">
+                                 <padding>
+                                    <Insets left="30.0" />
+                                 </padding>
+                              </RadioButton>
+                              <Label layoutY="105.0" prefHeight="31.0" prefWidth="165.0" styleClass="text" text="Choose Public Key:" />
+                              <ComboBox fx:id="publicKeyComboBox" layoutY="136.0" prefHeight="39.0" prefWidth="165.0" styleClass="combo-box-encrypt" visibleRowCount="3" />
+                           </children>
+                        </Pane>
                      </children>
                      <padding>
                         <Insets left="30.0" right="30.0" />
                      </padding>
                   </VBox>
-                  <VBox layoutX="10.0" layoutY="10.0" prefHeight="311.0" prefWidth="225.0" styleClass="encryptOptionBlock">
+                  <VBox layoutX="10.0" layoutY="10.0" prefHeight="320.0" prefWidth="225.0" styleClass="encryptOptionBlock">
                      <children>
                         <HBox prefHeight="52.0" prefWidth="225.0" styleClass="encrypt-subheader">
                            <children>
@@ -99,98 +98,102 @@
                                     <Font size="20.0" />
                                  </font>
                               </Label>
-                              <CheckBox fx:id="signCheckbox" mnemonicParsing="false" prefHeight="52.0" prefWidth="10.0" styleClass="check-box-encrypt" />
+                              <CheckBox fx:id="signCheckbox" mnemonicParsing="false" onAction="#signCheckboxAction" prefHeight="52.0" prefWidth="10.0" selected="true" styleClass="check-box-encrypt" />
                            </children>
                            <padding>
                               <Insets bottom="10.0" />
                            </padding>
                         </HBox>
-                        <Label prefHeight="31.0" prefWidth="225.0" styleClass="text" text="Enter Passphrase:">
-                           <VBox.margin>
-                              <Insets />
-                           </VBox.margin>
-                        </Label>
-                        <PasswordField maxHeight="-Infinity" prefHeight="37.0" styleClass="text-field-encrypt" />
-                        <VBox prefHeight="27.0" prefWidth="165.0" />
-                        <Label prefHeight="31.0" prefWidth="225.0" styleClass="text" text="Choose Secret Key:">
-                           <VBox.margin>
-                              <Insets top="10.0" />
-                           </VBox.margin>
-                        </Label>
-                        <ComboBox fx:id="secretKeyComboBox" prefHeight="39.0" prefWidth="165.0" styleClass="combo-box-encrypt" visibleRowCount="3">
-                           <VBox.margin>
-                              <Insets />
-                           </VBox.margin>
-                        </ComboBox>
+                        <Pane fx:id="signOptionsPane" prefHeight="209.0">
+                           <children>
+                              <Pane fx:id="passphraseOptionPane" disable="true">
+                                 <children>
+                                    <Label prefHeight="31.0" prefWidth="165.0" styleClass="text" text="Enter Passphrase:" />
+                                    <PasswordField fx:id="passphraseField" layoutY="31.0" maxHeight="-Infinity" prefHeight="37.0" prefWidth="165.0" styleClass="text-field-encrypt" />
+                                 </children>
+                              </Pane>
+                              <VBox layoutY="68.57142639160156" prefHeight="37.0" prefWidth="165.0" />
+                              <Label layoutY="105.0" prefHeight="31.0" prefWidth="165.0" styleClass="text" text="Choose Secret Key:" />
+                              <ComboBox fx:id="secretKeyComboBox" layoutY="136.0" onAction="#secretKeySelectedAction" prefHeight="39.0" prefWidth="165.0" styleClass="combo-box-encrypt" visibleRowCount="3" />
+                           </children>
+                        </Pane>
                      </children>
                      <padding>
                         <Insets left="30.0" right="30.0" />
                      </padding>
                   </VBox>
-                  <VBox layoutX="235.0" layoutY="10.0" prefHeight="311.0" prefWidth="225.0" styleClass="encryptOptionBlock">
+                  <VBox layoutX="235.0" layoutY="10.0" prefHeight="320.0" prefWidth="225.0" styleClass="encryptOptionBlock">
                      <children>
-                        <HBox prefHeight="52.0" prefWidth="225.0" styleClass="encrypt-subheader">
+                        <HBox prefHeight="52.0" prefWidth="165.0" styleClass="encrypt-subheader">
                            <children>
                               <Label prefHeight="52.0" prefWidth="207.0" styleClass="text" text="Compress:">
                                  <font>
                                     <Font size="20.0" />
                                  </font>
                               </Label>
-                              <CheckBox fx:id="compressCheckbox" mnemonicParsing="false" prefHeight="52.0" prefWidth="10.0" styleClass="check-box-encrypt" />
+                              <CheckBox fx:id="compressCheckbox" mnemonicParsing="false" prefHeight="52.0" prefWidth="10.0" selected="true" styleClass="check-box-encrypt" />
                            </children>
                            <padding>
                               <Insets bottom="10.0" />
                            </padding>
                         </HBox>
-                        <HBox layoutX="40.0" layoutY="10.0" prefHeight="82.0" prefWidth="165.0" styleClass="encrypt-subheader">
+                        <HBox layoutX="40.0" layoutY="10.0" prefHeight="89.0" prefWidth="165.0" styleClass="encrypt-subheader">
                            <children>
                               <Label prefHeight="83.0" prefWidth="148.0" styleClass="text" text="Radix-64 Conversion:" wrapText="true">
                                  <font>
                                     <Font size="20.0" />
                                  </font>
                               </Label>
-                              <CheckBox fx:id="radix64Checkbox" mnemonicParsing="false" prefHeight="74.0" prefWidth="17.0" styleClass="check-box-encrypt" />
+                              <CheckBox fx:id="radix64Checkbox" mnemonicParsing="false" prefHeight="74.0" prefWidth="17.0" selected="true" styleClass="check-box-encrypt" />
                            </children>
                            <padding>
-                              <Insets bottom="10.0" />
+                              <Insets bottom="10.0" top="10.0" />
                            </padding>
                         </HBox>
-                        <Button fx:id="chooseFileButton" mnemonicParsing="false" onAction="#chooseFileButtonAction" prefHeight="27.0" prefWidth="165.0" styleClass="button-encrypt" text="Choose File">
-                           <VBox.margin>
-                              <Insets bottom="12.0" top="12.0" />
-                           </VBox.margin>
-                           <font>
-                              <Font size="12.0" />
-                           </font>
-                        </Button>
-                        <Button fx:id="chooseOutputDirectoryButton" mnemonicParsing="false" onAction="#chooseOutputDirectoryButtonAction" prefHeight="27.0" prefWidth="165.0" styleClass="button-encrypt" text="Choose Output Directory" wrapText="true">
-                           <VBox.margin>
-                              <Insets bottom="12.0" top="12.0" />
-                           </VBox.margin>
-                           <font>
-                              <Font size="12.0" />
-                           </font>
-                        </Button>
                      </children>
                      <padding>
                         <Insets left="30.0" right="30.0" />
                      </padding>
                   </VBox>
-                  <VBox layoutX="460.0" layoutY="10.0" prefHeight="311.0" prefWidth="225.0">
+                  <VBox layoutX="460.0" layoutY="10.0" prefHeight="320.0" prefWidth="225.0">
                      <children>
-                        <AnchorPane prefHeight="273.0" prefWidth="165.0">
-                           <VBox.margin>
-                              <Insets top="12.0" />
-                           </VBox.margin>
+                        <VBox styleClass="encrypt-subheader">
                            <children>
-                              <Button layoutY="95.0" mnemonicParsing="false" onAction="#exportMessageAction" prefHeight="27.0" prefWidth="165.0" styleClass="button-encrypt" text="Export Message">
-                                 <font>
-                                    <Font size="12.0" />
-                                 </font>
-                              </Button>
-                              <Label fx:id="statusLabel" alignment="CENTER" layoutY="123.0" prefHeight="27.0" prefWidth="165.0" styleClass="text" />
+                              <Label minHeight="-Infinity" prefHeight="58.0" prefWidth="165.0" styleClass="text" text="Choose File to Encrypt/Sign:" wrapText="true" />
+                              <Button fx:id="chooseFileButton" mnemonicParsing="false" onAction="#chooseFileButtonAction" prefHeight="27.0" prefWidth="165.0" styleClass="button-encrypt" text="Choose File" />
                            </children>
-                        </AnchorPane>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                           <padding>
+                              <Insets bottom="10.0" />
+                           </padding>
+                        </VBox>
+                        <VBox prefHeight="85.0" prefWidth="165.0" styleClass="encrypt-subheader">
+                           <children>
+                              <Label minHeight="-Infinity" prefHeight="58.0" prefWidth="165.0" styleClass="text" text="Choose Output Directory:" wrapText="true" />
+                              <Button fx:id="chooseOutputDirectoryButton" mnemonicParsing="false" onAction="#chooseOutputDirectoryButtonAction" prefHeight="27.0" prefWidth="165.0" styleClass="button-encrypt" text="Choose Directory" wrapText="true" />
+                           </children>
+                           <VBox.margin>
+                              <Insets bottom="10.0" />
+                           </VBox.margin>
+                           <padding>
+                              <Insets bottom="10.0" />
+                           </padding>
+                        </VBox>
+                        <Button id="encrypt-sign-button" fx:id="exportButton" mnemonicParsing="false" onAction="#exportAction" prefHeight="27.0" prefWidth="165.0" styleClass="button-encrypt" text="Encrypt/Sign" textFill="#3278e8">
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                        </Button>
+                        <Label fx:id="statusLabel" alignment="TOP_CENTER" prefHeight="56.0" prefWidth="165.0" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+                           <font>
+                              <Font size="12.0" />
+                           </font>
+                           <padding>
+                              <Insets top="10.0" />
+                           </padding>
+                        </Label>
                      </children>
                      <padding>
                         <Insets left="30.0" right="30.0" />

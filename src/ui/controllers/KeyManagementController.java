@@ -98,7 +98,29 @@ public class KeyManagementController {
         if (keyInfo != null) {
             try {
                 if (KeyManager.isEncrypted(keyInfo)){
-                    this.statusLabel.setText("Enter passphrase to delete the key: " + keyInfo);
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("..\\resources\\passphraseDialog.fxml"));
+                    DialogPane dialogPane = null;
+                    try {
+                        dialogPane = loader.load();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    dialogPane.getStylesheets().add(getClass().getResource("..\\resources\\style.css").toExternalForm());
+
+                    PassphraseDialogController controller = loader.getController();
+                    alert.setTitle("Enter Passphrase");
+                    alert.setDialogPane(dialogPane);
+                    ButtonType buttonType = alert.showAndWait().get();
+                    if (buttonType == ButtonType.OK)
+                        try {
+                            KeyManager.deleteSecretKey(keyInfo, controller.getPassphrase());
+                            KeyInfoObservableLists.getSecretKeyObservableList().remove(keyInfo);
+                            statusLabel.setText("Deleted secret key: " + keyInfo);
+                        }
+                        catch (PGPException e) {
+                            statusLabel.setText("Incorrect passphrase.");
+                        }
                 }
                 else {
                     KeyManager.deleteSecretKey(keyInfo, "");
@@ -164,6 +186,8 @@ public class KeyManagementController {
         } else
             statusLabel.setText("Choose public key you wish to export.");
     }
+    FXMLLoader loader = new FXMLLoader(getClass().getResource("..\\resources\\passphraseDialog.fxml"));
+    PassphraseDialogController controller = loader.getController();
 
     @FXML
     private void generateNewKeyPair(MouseEvent event) {
@@ -180,13 +204,10 @@ public class KeyManagementController {
         GenerateKeysController controller = loader.getController();
         alert.setTitle("Generate Key Pair");
         alert.setDialogPane(dialogPane);
-
-        Optional<ButtonType> result = alert.showAndWait();
-
-        if (result.get() == ButtonType.OK) {
-
+        ButtonType buttonType =  alert.showAndWait().get();
+        if (buttonType == ButtonType.OK) {
             try {
-                statusLabel.setText("Generating new key pair...");// Update on JavaFX Application Thread
+                statusLabel.setText("Generating new key pair...");
                 Pair<PublicKeyInfo, SecretKeyInfo> keyPairInfo = KeyManager.generateKeys(new User(controller.getUsername(), controller.getEmail(), controller.getPassphrase()), controller.getKeyMaterial(), controller.getSubkeyMaterial());
                 KeyInfoObservableLists.getPublicKeyObservableList().add(keyPairInfo.getKey());
                 KeyInfoObservableLists.getSecretKeyObservableList().add(keyPairInfo.getValue());
@@ -198,6 +219,8 @@ public class KeyManagementController {
         }
 
     }
+
+
 
     @FXML
     private void importKeys(ActionEvent event) {

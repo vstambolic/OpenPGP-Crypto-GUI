@@ -44,7 +44,7 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <Button id="menu-button-decrypt" mnemonicParsing="false" prefHeight="163.0" prefWidth="163.0" styleClass="menu-button" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+            <Button id="menu-button-decrypt" mnemonicParsing="false" onAction="#showDecryptPage" prefHeight="163.0" prefWidth="163.0" styleClass="menu-button" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1">
                <graphic>
                   <ImageView fx:id="imageViewUnlocked" fitHeight="69.0" fitWidth="63.0" pickOnBounds="true" preserveRatio="true" />
                </graphic></Button>
