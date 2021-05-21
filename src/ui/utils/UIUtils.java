@@ -9,23 +9,19 @@ import java.io.IOException;
 
 public class UIUtils {
     private static UIUtils instance;
-    private static Scene scene;
+    private Stage stage;
 
-    public static void setScene(Scene _scene) {
-        scene = _scene;
+    public static void setStage(Stage stage) {
+        getInstance().stage = stage;
     }
 
     private UIUtils() {
     }
 
     public static UIUtils getInstance() {
-        if (instance==null)
+        if (instance == null)
             instance = new UIUtils();
         return instance;
-    }
-
-    public static Scene getScene() {
-        return scene;
     }
 
     public void switchPages(String fxmlPath) {
@@ -37,6 +33,10 @@ public class UIUtils {
             e.printStackTrace();
         }
 
-        scene.setRoot(parent);
+        this.stage.getScene().setRoot(parent);
+    }
+
+    public Stage getStage() {
+        return this.stage;
     }
 }

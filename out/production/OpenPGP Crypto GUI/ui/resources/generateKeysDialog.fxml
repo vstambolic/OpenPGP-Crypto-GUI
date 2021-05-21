@@ -42,33 +42,33 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label styleClass="text" text="Encryption algorithm:" GridPane.rowIndex="4">
+            <Label styleClass="text" text="Subkey material:" GridPane.rowIndex="4">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label styleClass="text" text="Signature algorithm:" GridPane.rowIndex="3">
+            <Label styleClass="text" text="Key material:" GridPane.rowIndex="3">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <TextField prefWidth="214.0" styleClass="text-field-keyManagement" GridPane.columnIndex="1">
+            <TextField fx:id="usernameTextField" prefWidth="214.0" styleClass="text-field-keyManagement" GridPane.columnIndex="1">
                <font>
                   <Font size="14.0" />
                </font>
             </TextField>
-            <TextField styleClass="text-field-keyManagement" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <TextField fx:id="emailTextField" styleClass="text-field-keyManagement" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <font>
                   <Font size="14.0" />
                </font>
             </TextField>
-            <PasswordField styleClass="text-field-keyManagement" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <PasswordField fx:id="passphraseTextField" styleClass="text-field-keyManagement" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <font>
                   <Font size="14.0" />
                </font>
             </PasswordField>
-            <ListView maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="152.0" styleClass="list-view-keyManagement" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <ListView maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="152.0" styleClass="list-view-keyManagement" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <ListView fx:id="singatureListView" fixedCellSize="30.0" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="152.0" styleClass="list-view-keyManagement" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <ListView fx:id="encryptionListView" fixedCellSize="30.0" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="152.0" styleClass="list-view-keyManagement" GridPane.columnIndex="1" GridPane.rowIndex="4" />
          </children>
          <padding>
             <Insets left="30.0" right="30.0" />

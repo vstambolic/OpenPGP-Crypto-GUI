@@ -12,6 +12,14 @@ import ui.utils.UIUtils;
  * Main
  * @author VStambolic
  */
+
+/**
+ * TODO
+ * 1) KeyManagementController dialog for secret key deletion
+ * 2) show keys ???
+ * 3) Decrypt Page
+ * 4) Encrypt Page controls
+ */
 public class Main extends Application {
 
     @Override
@@ -21,7 +29,7 @@ public class Main extends Application {
         primaryStage.setTitle("OpenPGP Crypto GUI");
         Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("resources\\style.css").toExternalForm());
-        UIUtils.setScene(scene);
+        UIUtils.setStage(primaryStage);
         primaryStage.setScene(scene);
         primaryStage.show();
 //        ScenicView.show(scene);

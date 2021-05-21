@@ -1,16 +1,25 @@
 package ui.controllers;
 
 
+import engine.key_management.entities.KeyInfo;
+import engine.key_management.entities.PublicKeyInfo;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import org.bouncycastle.openpgp.examples.DSAElGamalKeyRingGenerator;
+import ui.utils.KeyInfoObservableLists;
+import ui.utils.UIUtils;
+
+import java.util.stream.Collectors;
 
 public class EncryptPageController {
 
 
+
+    @FXML
+    private ImageView imageViewBack;
 
     @FXML
     private CheckBox encryptCheckbox;
@@ -35,6 +44,12 @@ public class EncryptPageController {
 
     @FXML
     private Label statusLabel;
+    @FXML
+    private ComboBox<KeyInfo> publicKeyComboBox;
+
+    @FXML
+    private ComboBox<KeyInfo> secretKeyComboBox;
+
 
     @FXML
     void chooseFileButtonAction(ActionEvent event) {
@@ -53,14 +68,14 @@ public class EncryptPageController {
 
     @FXML
     void initialize() {
-        assert encryptCheckbox != null : "fx:id=\"encryptCheckbox\" was not injected: check your FXML file 'encryptPage.fxml'.";
-        assert symmetricAlgorithm != null : "fx:id=\"symetricAlgorithm\" was not injected: check your FXML file 'encryptPage.fxml'.";
-        assert signCheckbox != null : "fx:id=\"signCheckbox\" was not injected: check your FXML file 'encryptPage.fxml'.";
-        assert compressCheckbox != null : "fx:id=\"compressCheckbox\" was not injected: check your FXML file 'encryptPage.fxml'.";
-        assert radix64Checkbox != null : "fx:id=\"radix64Checkbox\" was not injected: check your FXML file 'encryptPage.fxml'.";
-        assert chooseFileButton != null : "fx:id=\"chooseFileButton\" was not injected: check your FXML file 'encryptPage.fxml'.";
-        assert chooseOutputDirectoryButton != null : "fx:id=\"chooseOutputDirectoryButton\" was not injected: check your FXML file 'encryptPage.fxml'.";
-        assert statusLabel != null : "fx:id=\"statusLabel\" was not injected: check your FXML file 'encryptPage.fxml'.";
+        imageViewBack.setImage(new Image(getClass().getResource("..\\resources\\icons\\backBlue.png").toExternalForm()));
 
+        this.publicKeyComboBox.setItems(KeyInfoObservableLists.getPublicKeyObservableList());
+        this.secretKeyComboBox.setItems(KeyInfoObservableLists.getSecretKeyObservableList());
+    }
+
+    @FXML
+    private void backAction(ActionEvent event) {
+        UIUtils.getInstance().switchPages("..\\resources\\home.fxml");
     }
 }

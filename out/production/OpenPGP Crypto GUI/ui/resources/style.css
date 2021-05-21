@@ -23,6 +23,8 @@
     -fx-cursor: hand;
 
 }
+
+
 #menu-button-encrypt {
     -fx-border-color: #3278E8;
     -fx-effect: dropshadow(three-pass-box, rgba(185, 211, 243, 0.78), 10, 0, 0, 0);
@@ -42,6 +44,49 @@
     -fx-effect: dropshadow(three-pass-box, rgba(255, 255, 255, 0.78),2, 0, 0, 0);
 }
 
+.list-view .scroll-bar:vertical {
+    -fx-scale-x: 0;
+}
+.list-view .scroll-bar:horizontal {
+    -fx-scale-y: 0;
+}
+.list-view .scroll-bar:horizontal .increment-arrow,
+.list-view .scroll-bar:horizontal .decrement-arrow,
+.list-view .scroll-bar:horizontal .increment-button,
+.list-view .scroll-bar:horizontal .decrement-button {
+    -fx-padding: 0px;
+}
+.list-view .scroll-bar:vertical .increment-arrow,
+.list-view .scroll-bar:vertical .decrement-arrow,
+.list-view .scroll-bar:vertical .increment-button,
+.list-view .scroll-bar:vertical .decrement-button {
+    -fx-padding: 0px;
+}
+
+
+
+/*** ENCRYPT STYLE ***/
+
+.combo-box-encrypt {
+    -fx-background-color: transparent;
+    /*-fx-border-color: #3278E8;*/
+    -fx-padding: 0px;
+    -fx-cursor: hand;
+
+
+}
+.combo-box-encrypt .list-cell{
+    -fx-border-color: #3278E8;
+    -fx-text-fill: white;
+}
+.combo-box-encrypt .arrow-button,.combo-box-encrypt .arrow-button .arrow {
+    -fx-padding: 0px;
+    -fx-scale-y: 0;
+    -fx-scale-y: 0;
+}
+.combo-box-encrypt .list-cell:selected{
+    -fx-text-fill: #3278E8;
+}
 .encryptOptionBlock {
     -fx-border-style: hidden solid hidden hidden;
     -fx-border-color: #3278E8;
@@ -53,9 +98,6 @@
     -fx-border-color: #3278E8;
     -fx-border-width: 1px;
 }
-
-
-/*** ENCRYPT STYLE ***/
 
 .check-box-encrypt .box{
     -fx-border-color: #3278E8;
@@ -70,6 +112,7 @@
 .radio-button {
     -fx-text-fill: white;
 }
+
 .radio-button-encrypt .radio{
     -fx-border-color     : #3278E8;
     -fx-background-color : black ;
@@ -84,25 +127,34 @@
     -fx-background-color:  black;
     -fx-border-color     : #3278E8;
 }
-.list-view {
-    -fx-background-color:  black;
+.list-view-encrypt {
+    -fx-background-color:  transparent;
     -fx-border-color     : #3278E8;
+    -fx-padding: 0em;
+}
+.list-view-encrypt .list-cell {
+    -fx-text-fill: white;
+    -fx-border-color     : #3278E8;
+    -fx-border-style    : hidden hidden solid hidden;
+    -fx-cursor: hand;
+    -fx-wrap-text: true;
+
+}
+
+.list-view-encrypt .list-cell:selected {
+    -fx-text-fill: #3278E8;
 }
 
 .button-encrypt {
-    -fx-background-color:
-            black;
-
+    -fx-background-color:black;
     -fx-background-insets: 0,1,2;
     -fx-border-color: #3278E8;
-
     -fx-text-fill: white;
     -fx-cursor: hand;
 }
 
 .button-encrypt:hover {
-    -fx-text-fill: black;
-    -fx-background-color:  #3278E8;
+    -fx-text-fill: #3278E8;
 }
 
 /*** KEY MANAGEMENT STYLE ***/
@@ -122,8 +174,7 @@
     -fx-cursor: hand;
 }
 .button-keyManagement:hover {
-    -fx-text-fill: black;
-    -fx-background-color: #52A9A4;
+    -fx-text-fill: #52A9A4;
 }
 
 .check-box-keyManagement .box{
@@ -136,7 +187,7 @@
     -fx-mark-highlight-color: #97d4d0;
 }
 
-.
+
 .hyperlink {
     -fx-text-fill: #52A9A4;
 }
@@ -176,6 +227,8 @@
     -fx-text-fill: white;
     -fx-border-color: #52A9A4;
     -fx-padding: 0em;
+    -fx-alignment: center;
+
 
 }
 
@@ -184,11 +237,16 @@
     -fx-background-color: transparent;
 }
 
-.table-row-cell:selected {
-    -fx-background-color: #52A9A4;
-    -fx-background-insets: 0;
-    -fx-text-fill: black;
+
+.table-row-cell:selected .table-cell {
+    -fx-text-fill: #52A9A4;
 }
+
+/*.table-row-cell:selected {*/
+/*    -fx-background-color: #52A9A4;*/
+/*    -fx-background-insets: 0;*/
+/*    -fx-text-fill: black;*/
+/*}*/
 
 .table-view > .virtual-flow > .scroll-bar:vertical,
 .table-view > .virtual-flow > .scroll-bar:vertical > .track,
@@ -213,25 +271,39 @@
     -fx-background-color:  transparent;
 }
 .text-field-keyManagement, .list-view-keyManagement {
-    -fx-background-color:  black;
+    -fx-background-color:  transparent;
     -fx-border-color     : #52A9A4;
 }
 
 
 #generateKeysDialog .button {
-    -fx-background-color:black;
+    -fx-background-color:transparent;
     -fx-text-fill:white;
     -fx-cursor:hand;
     -fx-border-color: #52A9A4;
 }
 
 #generateKeysDialog .button:hover {
-    -fx-background-color: #52A9A4;
-    -fx-text-fill:black;
-    -fx-cursor:hand;
+    /*-fx-background-color: #52A9A4;*/
+    -fx-text-fill: #52A9A4;
 }
 
+.list-view-keyManagement {
+    -fx-background-color:  transparent;
+    -fx-border-color     : #52A9A4;
+    -fx-padding: 0em;
+}
+.list-view-keyManagement .list-cell {
+    -fx-text-fill: white;
+    -fx-border-color     :#52A9A4;
+    -fx-border-style    : hidden hidden solid hidden;
+    -fx-cursor: hand;
 
+}
+
+.list-view-keyManagement .list-cell:selected {
+    -fx-text-fill: #52A9A4;
+}
 
 
 
@@ -263,5 +335,6 @@
     -fx-background-color: #8E0E0E;
     -fx-mark-highlight-color: #b45d5d;
 }
+
 
 
