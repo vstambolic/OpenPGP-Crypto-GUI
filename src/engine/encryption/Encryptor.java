@@ -26,7 +26,7 @@ public class Encryptor {
 
     private static OutputStream Encrypt(OutputStream stream, PGPPublicKey publicKey, String algorithm){
         try{
-            int alg = algorithm.equals("TRIPLE_DES") ? PGPEncryptedData.TRIPLE_DES : PGPEncryptedData.CAST5;
+            int alg = algorithm.equals("Triple-DES") ? PGPEncryptedData.TRIPLE_DES : PGPEncryptedData.CAST5;
             OutputStream encryptionOut = null;
             final PGPEncryptedDataGenerator encryptedDataGenerator = new PGPEncryptedDataGenerator(
                     new JcePGPDataEncryptorBuilder((alg)).setWithIntegrityPacket(true)
@@ -88,7 +88,7 @@ public class Encryptor {
         return null;
     }
 
-    public static byte[] Encrypt(final byte[] msg, String algorithm,PGPPublicKey publicKey, PGPSecretKey secretKey, String passphrase, String fileName, boolean encrypt, boolean compress, boolean armoured, boolean sign){
+    public static byte[] Encrypt(final byte[] msg, String algorithm,PGPPublicKey publicKey, PGPSecretKey secretKey, String passphrase, String fileName, String savePath, boolean encrypt, boolean compress, boolean armoured, boolean sign){
         try(ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
             final ByteArrayInputStream in = new ByteArrayInputStream( msg );
             OutputStream encryptionOut = null;
@@ -129,11 +129,11 @@ public class Encryptor {
             OutputStream literalOut = null;
 
             if (compress)
-                literalOut = literalDataGenerator.open(compressOut, PGPLiteralData.BINARY, fileName, new Date(), new byte[4096]);
+                literalOut = literalDataGenerator.open(compressOut, PGPLiteralData.BINARY, String.format("%s\\%s%s", savePath, fileName, ".gpg"), new Date(), new byte[4096]);
             else if(encrypt)
-                literalOut = literalDataGenerator.open(encryptionOut, PGPLiteralData.BINARY, fileName, new Date(), new byte[4096]);
+                literalOut = literalDataGenerator.open(encryptionOut, PGPLiteralData.BINARY, String.format("%s\\%s%s", savePath, fileName, ".gpg"), new Date(), new byte[4096]);
             else
-                literalOut = literalDataGenerator.open(mainStream, PGPLiteralData.BINARY, fileName, new Date(), new byte[4096]);
+                literalOut = literalDataGenerator.open(mainStream, PGPLiteralData.BINARY, String.format("%s\\%s%s", savePath, fileName, ".gpg"), new Date(), new byte[4096]);
 
             final byte[] buf = new byte[4096];
             for(int len = 0; (len = in.read(buf)) > 0;) {

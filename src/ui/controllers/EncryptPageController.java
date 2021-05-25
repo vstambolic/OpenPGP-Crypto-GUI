@@ -1,5 +1,6 @@
 package ui.controllers;
 
+import engine.encryption.Encryptor;
 import engine.key_management.KeyManager;
 import engine.key_management.entities.KeyInfo;
 import javafx.event.ActionEvent;
@@ -16,6 +17,7 @@ import ui.utils.KeyInfoObservableLists;
 import ui.utils.UIUtils;
 
 import java.io.File;
+import java.nio.file.Files;
 
 public class EncryptPageController {
 
@@ -140,6 +142,14 @@ public class EncryptPageController {
 
     @FXML
     private void exportAction(ActionEvent event) {
+        try{
+            Encryptor.Encrypt(Files.readAllBytes(file.toPath()), ((RadioButton)this.symmetricAlgorithm.getSelectedToggle()).getText(), null,
+                    null, this.passphraseField.getText(), file.getName(), outputDirectory.getPath(),
+                    this.encryptCheckbox.isSelected(), this.compressCheckbox.isSelected(), this.radix64Checkbox.isSelected(), this.signCheckbox.isSelected());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         /**
          * TODO
          * U zavisnosti od izabrane opcije
