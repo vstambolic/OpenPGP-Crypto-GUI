@@ -11,6 +11,9 @@ import java.util.Iterator;
 import java.util.Scanner;
 
 
+import engine.key_management.KeyManager;
+import engine.key_management.entities.PublicKeyInfo;
+import engine.key_management.entities.SecretKeyInfo;
 import org.bouncycastle.asn1.cms.OriginatorPublicKey;
 import org.bouncycastle.bcpg.ArmoredOutputStream;
 import org.bouncycastle.bcpg.BCPGOutputStream;
@@ -21,6 +24,8 @@ import org.bouncycastle.openpgp.*;
 import org.bouncycastle.openpgp.jcajce.JcaPGPObjectFactory;
 import org.bouncycastle.openpgp.operator.jcajce.*;
 import org.bouncycastle.util.io.Streams;
+
+import javax.crypto.spec.SecretKeySpec;
 
 public class Encryptor {
 
@@ -165,4 +170,122 @@ public class Encryptor {
         return null;
     }
 
+    public static String Decrypt(FileInputStream fileInputStream) {
+        try{
+            InputStream in = fileInputStream;
+            in = PGPUtil.getDecoderStream(in);
+
+            JcaPGPObjectFactory pgpFactory = new JcaPGPObjectFactory(in);
+
+            PGPEncryptedDataList encryptedDataList;
+
+            Object message = pgpFactory.nextObject();
+            while(message != null){
+                if(message instanceof PGPEncryptedDataList){
+                    encryptedDataList = (PGPEncryptedDataList) message;
+                    Iterator it = encryptedDataList.getEncryptedDataObjects();
+                    PGPPrivateKey sKey = null;
+                    PGPPublicKeyEncryptedData pbe = null;
+
+                    while (sKey == null && it.hasNext()) {
+                        pbe = (PGPPublicKeyEncryptedData) it.next();
+                        String password = null;
+                        for(PublicKeyInfo info : KeyManager.getPublicKeyInfoCollection()){
+                            if(info.getKeyId().equals(pbe.getKeyID())){
+                                //Get password from ID
+                            }
+                        }
+
+                        //String password = Keys.getPassword(pbe.getKeyID());
+                        if (password == null) continue;
+                        try {
+                            PGPSecretKey pgpSecKey = null;
+                            for(SecretKeyInfo info : KeyManager.getSecretKeyInfoCollection()){
+                                if(info.getKeyId().equals(pbe.getKeyID())){
+                                    // Get secret key from ID
+                                }
+                            }
+                            if (pgpSecKey == null) return "Could not find the key.";
+                            sKey = pgpSecKey.extractPrivateKey(new JcePBESecretKeyDecryptorBuilder().setProvider("BC").build(password.toCharArray()));
+
+                        }catch (Exception e) {
+                            return "Wrong password";
+                        }
+                    }
+                    if (sKey == null) {
+                        return "Decryption failed. Unknown receiver";
+                    }
+                    InputStream clear = pbe.getDataStream(new JcePublicKeyDataDecryptorFactoryBuilder().setProvider("BC").build(sKey));
+                    pgpFactory = new JcaPGPObjectFactory(clear);
+                    message = pgpFactory.nextObject();
+                    System.out.println("Encryption successful\n");
+                    continue;
+                }
+
+                if (message instanceof PGPCompressedData) {
+                    PGPCompressedData cData = (PGPCompressedData) message;
+
+                    pgpFactory = new JcaPGPObjectFactory(cData.getDataStream());
+                    message = pgpFactory.nextObject();
+
+                    System.out.println("Compression successful\n");
+                    continue;
+                }
+
+                if (message instanceof PGPLiteralData) {
+                    PGPLiteralData ld = (PGPLiteralData) message;
+
+                    InputStream unc = ld.getInputStream();
+
+                    Scanner s = new Scanner(unc).useDelimiter("\\A");
+                    String result = s.hasNext() ? s.next() : "NO DATA AT ALL";
+                    System.out.println("Message read");
+                    return result;
+                }
+
+                if(message instanceof PGPOnePassSignatureList){
+                    PGPOnePassSignatureList onePassSignatureList = (PGPOnePassSignatureList) message;
+                    PGPOnePassSignature signature = onePassSignatureList.get(0);
+
+                    message = pgpFactory.nextObject();
+                    PGPLiteralData literalData = (PGPLiteralData) message;
+
+                    InputStream dIn = literalData.getInputStream();
+                    int ch;
+
+
+                    PGPPublicKey key = null;
+                    for(SecretKeyInfo info : KeyManager.getSecretKeyInfoCollection()){
+                        if(info.getKeyId().equals(signature.getKeyID())){
+                            // Get public key from ID
+                        }
+                    }
+
+                    signature.init(new JcaPGPContentVerifierBuilderProvider().setProvider("BC"), key);
+                    String result = "";
+                    while ((ch = dIn.read()) >= 0) {
+                        result = result + (char)ch;
+                        signature.update((byte) ch);
+                    }
+                    message = pgpFactory.nextObject();
+                    PGPSignatureList signatureList = (PGPSignatureList) message;
+
+                    if (signature.verify(signatureList.get(0))) {
+                        System.out.println("Signature verified by " + key.getUserIDs().next() + "\n");
+                        System.out.println("signature verified.");
+                        return result;
+                    } else {
+                        System.out.println("Verification error!\n");
+                    }
+                    break;
+                }
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return "";
+    }
+
 }
+

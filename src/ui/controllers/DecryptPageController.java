@@ -1,5 +1,6 @@
 package ui.controllers;
 
+import engine.encryption.Encryptor;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -12,6 +13,8 @@ import javafx.stage.FileChooser;
 import ui.utils.UIUtils;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 public class DecryptPageController {
 
@@ -77,6 +80,13 @@ public class DecryptPageController {
 
     @FXML
     private void decryptVerify(ActionEvent event) {
+        try {
+            FileInputStream fileInputStream = new FileInputStream(file);
+            Encryptor.Decrypt(fileInputStream);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
 /*
     TODO
     DecryptionVerificationStatus status = DecryptorVerifier.action(this.file);
