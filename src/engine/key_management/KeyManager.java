@@ -324,6 +324,16 @@ public class KeyManager {
         return keyInfoList;
     }
 
+    public static PGPPublicKey getPublicKey(KeyInfo keyInfo) throws PGPException {
+        PGPPublicKeyRing publicKeyRing = PUBLIC_KEY_RINGS.getPublicKeyRing(keyInfo.getKeyIdLong());
+        return publicKeyRing.getPublicKey();
+    }
+
+    public static PGPSecretKey getSecretKey(KeyInfo keyInfo) throws PGPException {
+        PGPSecretKeyRing secretKeyRing = SECRET_KEY_RINGS.getSecretKeyRing(keyInfo.getKeyIdLong());
+        return secretKeyRing.getSecretKey();
+    }
+
 
     // Key deletion -----------------------------------------------------
     public static void deletePublicKey(KeyInfo keyInfo) throws PGPException {

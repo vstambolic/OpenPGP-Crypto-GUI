@@ -143,8 +143,8 @@ public class EncryptPageController {
     @FXML
     private void exportAction(ActionEvent event) {
         try{
-            Encryptor.Encrypt(Files.readAllBytes(file.toPath()), ((RadioButton)this.symmetricAlgorithm.getSelectedToggle()).getText(), null,
-                    null, this.passphraseField.getText(), file.getName(), outputDirectory.getPath(),
+            Encryptor.Encrypt(Files.readAllBytes(file.toPath()), ((RadioButton)this.symmetricAlgorithm.getSelectedToggle()).getText(), KeyManager.getPublicKey(publicKeyComboBox.getValue()),
+                    KeyManager.getSecretKey(secretKeyComboBox.getValue()), this.passphraseField.getText(), file.getName(), outputDirectory.getPath(),
                     this.encryptCheckbox.isSelected(), this.compressCheckbox.isSelected(), this.radix64Checkbox.isSelected(), this.signCheckbox.isSelected());
         }catch (Exception e){
             e.printStackTrace();
