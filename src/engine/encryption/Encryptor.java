@@ -93,7 +93,7 @@ public class Encryptor {
         return null;
     }
 
-    public static byte[] Encrypt(final byte[] msg, String algorithm,PGPPublicKey publicKey, PGPSecretKey secretKey, String passphrase, String fileName, String savePath, boolean encrypt, boolean compress, boolean armoured, boolean sign){
+    public static byte[] Encrypt(final byte[] msg, String algorithm,PGPPublicKeyRing publicKeyRing, PGPSecretKeyRing secretKeyRing, String passphrase, String fileName, String savePath, boolean encrypt, boolean compress, boolean armoured, boolean sign){
         try(ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
             final ByteArrayInputStream in = new ByteArrayInputStream( msg );
             OutputStream encryptionOut = null;
@@ -107,6 +107,9 @@ public class Encryptor {
             }
 
             if(encrypt){
+                Iterator it = publicKeyRing.iterator();
+                it.next();
+                PGPPublicKey publicKey = (PGPPublicKey) it.next();
                 encryptionOut = Encrypt(mainStream, publicKey, algorithm);
             }
 
@@ -121,6 +124,7 @@ public class Encryptor {
             PGPSignatureGenerator signatureGenerator = null;
             if (sign)
             {
+                PGPSecretKey secretKey = secretKeyRing.getSecretKey();
                 signatureGenerator = InitSignatureGenerator(secretKey, passphrase);
                 if  (compress)
                     signatureGenerator.generateOnePassVersion(false).encode(compressOut);

@@ -324,14 +324,23 @@ public class KeyManager {
         return keyInfoList;
     }
 
-    public static PGPPublicKey getPublicKey(KeyInfo keyInfo) throws PGPException {
-        PGPPublicKeyRing publicKeyRing = PUBLIC_KEY_RINGS.getPublicKeyRing(keyInfo.getKeyIdLong());
-        return publicKeyRing.getPublicKey();
+    public static PGPPublicKeyRing getPublicKeyRing(KeyInfo keyInfo) throws PGPException {
+        if(keyInfo != null){
+            PGPPublicKeyRing publicKeyRing = PUBLIC_KEY_RINGS.getPublicKeyRing(keyInfo.getKeyIdLong());
+            return publicKeyRing;
+        }else{
+            return null;
+        }
+
     }
 
-    public static PGPSecretKey getSecretKey(KeyInfo keyInfo) throws PGPException {
-        PGPSecretKeyRing secretKeyRing = SECRET_KEY_RINGS.getSecretKeyRing(keyInfo.getKeyIdLong());
-        return secretKeyRing.getSecretKey();
+    public static PGPSecretKeyRing getSecretKeyRing(KeyInfo keyInfo) throws PGPException {
+        if(keyInfo != null){
+            PGPSecretKeyRing secretKeyRing = SECRET_KEY_RINGS.getSecretKeyRing(keyInfo.getKeyIdLong());
+            return secretKeyRing;
+        }else{
+            return null;
+        }
     }
 
 
