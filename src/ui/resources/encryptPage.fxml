@@ -181,7 +181,7 @@
                               <Insets bottom="10.0" />
                            </padding>
                         </VBox>
-                        <Button id="encrypt-sign-button" fx:id="exportButton" mnemonicParsing="false" onAction="#exportAction" prefHeight="27.0" prefWidth="165.0" styleClass="button-encrypt" text="Encrypt/Sign" textFill="#3278e8">
+                        <Button id="encrypt-sign-button" fx:id="exportButton" disable="true" mnemonicParsing="false" onAction="#exportAction" prefHeight="27.0" prefWidth="165.0" styleClass="button-encrypt" text="Encrypt/Sign" textFill="#3278e8">
                            <VBox.margin>
                               <Insets top="10.0" />
                            </VBox.margin>

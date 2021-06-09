@@ -234,12 +234,12 @@ public class KeyManagementController {
                 String statusMessage = "Imported " + keyInfoList.size();
 
                 if (keyInfoList.isEmpty())
-                    statusMessage += "new keys.";
+                    statusMessage += " new keys.";
                 else if (keyInfoList.get(0) instanceof PublicKeyInfo) {
-                    statusMessage += "new public key(s).";
+                    statusMessage += " new public key(s).";
                     KeyInfoObservableLists.getPublicKeyObservableList().addAll(keyInfoList);
                 } else {
-                    statusMessage += "new secret key(s).";
+                    statusMessage += " new secret key(s).";
                     KeyInfoObservableLists.getSecretKeyObservableList().addAll(keyInfoList);
                 }
                 statusLabel.setText(statusMessage);

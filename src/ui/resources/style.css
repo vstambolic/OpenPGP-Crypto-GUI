@@ -356,5 +356,9 @@
     -fx-mark-highlight-color: #b45d5d;
 }
 
+.text-field-decrypt {
+    -fx-background-color:  black;
+    -fx-border-color     : #8E0E0E;
+}
 
 

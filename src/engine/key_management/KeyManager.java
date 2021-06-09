@@ -23,6 +23,7 @@ import org.bouncycastle.openpgp.operator.PGPDigestCalculator;
 import org.bouncycastle.openpgp.operator.bc.BcKeyFingerprintCalculator;
 import org.bouncycastle.openpgp.operator.jcajce.*;
 
+import javax.crypto.SecretKey;
 import java.io.*;
 import java.security.*;
 import java.util.*;
@@ -47,8 +48,10 @@ public class KeyManager {
         Security.addProvider(new BouncyCastleProvider());
         loadKeyRings();
     }
+
     // Make constructor private
-    private KeyManager(){}
+    private KeyManager() {
+    }
 
     // Load key rings from files
     private static void loadKeyRings() {
@@ -252,9 +255,9 @@ public class KeyManager {
 
         ArmoredOutputStream aos = new ArmoredOutputStream(new FileOutputStream(file));
         if (keyInfo instanceof PublicKeyInfo)
-            PUBLIC_KEY_RINGS.getPublicKey(keyInfo.getKeyIdLong()).encode(aos);
+            PUBLIC_KEY_RINGS.getPublicKeyRing(keyInfo.getKeyIdLong()).encode(aos);
         else
-            SECRET_KEY_RINGS.getSecretKey(keyInfo.getKeyIdLong()).encode(aos);
+            SECRET_KEY_RINGS.getSecretKeyRing(keyInfo.getKeyIdLong()).encode(aos);
 
         aos.close();
 
@@ -324,24 +327,6 @@ public class KeyManager {
         return keyInfoList;
     }
 
-    public static PGPPublicKeyRing getPublicKeyRing(KeyInfo keyInfo) throws PGPException {
-        if(keyInfo != null){
-            PGPPublicKeyRing publicKeyRing = PUBLIC_KEY_RINGS.getPublicKeyRing(keyInfo.getKeyIdLong());
-            return publicKeyRing;
-        }else{
-            return null;
-        }
-
-    }
-
-    public static PGPSecretKeyRing getSecretKeyRing(KeyInfo keyInfo) throws PGPException {
-        if(keyInfo != null){
-            PGPSecretKeyRing secretKeyRing = SECRET_KEY_RINGS.getSecretKeyRing(keyInfo.getKeyIdLong());
-            return secretKeyRing;
-        }else{
-            return null;
-        }
-    }
 
 
     // Key deletion -----------------------------------------------------
@@ -359,7 +344,48 @@ public class KeyManager {
         exportSecretKeyRings();
     }
 
+
+    // Program utility methods ------------------------------------------
     public static boolean isEncrypted(KeyInfo keyInfo) throws PGPException {
         return SECRET_KEY_RINGS.getSecretKey(keyInfo.getKeyIdLong()).getS2K() != null;
     }
+
+    public static boolean isEncrypted(PGPSecretKey secretKey) {
+        return secretKey.getS2K() != null;
+    }
+
+
+    // Various getters
+
+    public static PGPSecretKeyRing getSecretKeyRing(long keyID) throws PGPException {
+        return SECRET_KEY_RINGS.getSecretKeyRing(keyID);
+
+    }
+    // Finds secret key
+    public static PGPSecretKey getSecretKey(long keyId) throws PGPException {
+        return SECRET_KEY_RINGS.getSecretKey(keyId);
+    }
+
+    // Finds public key
+    public static PGPPublicKey getPublicKey(long keyId) throws PGPException {
+        return PUBLIC_KEY_RINGS.getPublicKey(keyId);
+    }
+
+    public static PGPPublicKey getPublicSubkey(long keyIdLong) throws PGPException {
+        PGPPublicKeyRing pkr = PUBLIC_KEY_RINGS.getPublicKeyRing(keyIdLong);
+        Iterator<PGPPublicKey> it = pkr.getPublicKeys();
+        while (it.hasNext()) {
+            PGPPublicKey pk = it.next();
+            if (pk.isEncryptionKey())
+                return pk;
+        }
+        return null;
+    }
+
+
+    // Extract Private key
+    public static PGPPrivateKey extractPrivateKey(PGPSecretKey secretKey, String passphrase) throws PGPException {
+        return secretKey.extractPrivateKey(new JcePBESecretKeyDecryptorBuilder().setProvider("BC").build(/*passphrase == null ? null : */passphrase.toCharArray()));
+    }
+
 }

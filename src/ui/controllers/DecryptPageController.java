@@ -1,20 +1,24 @@
 package ui.controllers;
 
-import engine.encryption.Encryptor;
+import engine.transfer.receiver.Receiver;
+import engine.transfer.receiver.exception.InvalidFileFormatException;
+import engine.transfer.receiver.exception.InvalidPassprhaseException;
+import engine.transfer.receiver.exception.KeyNotFoundException;
+import engine.transfer.receiver.exception.PassphraseRequiredException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
+import javafx.scene.control.PasswordField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import org.bouncycastle.openpgp.PGPException;
 import ui.utils.UIUtils;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class DecryptPageController {
 
@@ -51,6 +55,15 @@ public class DecryptPageController {
     private Label chosenFileLabel;
 
     @FXML
+    private PasswordField passphraseField;
+
+    @FXML
+    private Label keyIdLabel;
+
+    @FXML
+    private VBox passphraseVBox;
+
+    @FXML
     private VBox decryptionVBox;
 
     @FXML
@@ -68,6 +81,8 @@ public class DecryptPageController {
     @FXML
     private Button decryptVerifyButton;
 
+    private Receiver receiver;
+
     @FXML
     private void chooseFile(ActionEvent event) {
         File file = fileChooser.showOpenDialog(UIUtils.getInstance().getStage());
@@ -81,10 +96,23 @@ public class DecryptPageController {
     @FXML
     private void decryptVerify(ActionEvent event) {
         try {
-            FileInputStream fileInputStream = new FileInputStream(file);
-            Encryptor.Decrypt(fileInputStream);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            this.receiver = new Receiver(this.file);
+        } catch (IOException e) {
+            // TODO Invalid file format error
+            return;
+        }
+        try {
+            receiver.receive();
+        } catch (InvalidPassprhaseException e) {
+            // TODO
+        } catch (PassphraseRequiredException e) {
+            this.keyIdLabel.setText(e.getKeyIdHexString());
+            this.passphraseVBox.setVisible(true);
+        } catch (KeyNotFoundException e) {
+            // TODO
+        } catch (IOException | PGPException | InvalidFileFormatException e) {
+            // TODO Unexpected error
+            System.out.println("Invalid file format.");
         }
 
 /*
@@ -111,13 +139,28 @@ public class DecryptPageController {
     }
 
     @FXML
+    void passphraseEnteredAction(ActionEvent event) {
+        this.receiver.setPassphrase(this.passphraseField.getText());
+        try {
+            this.receiver.decrypt();
+        } catch (InvalidPassprhaseException | PassphraseRequiredException e) {
+            // TODO INVALID PASSWORD
+            System.out.println("invalid pass");
+        } catch (Exception e) {
+            // TODO INVALID FILE FORMAT
+            System.out.println("invalid file format");
+        }
+
+    }
+
+
+    @FXML
     private void saveDecryptedFile(ActionEvent event) {
         File file = saveFileChooser.showSaveDialog(UIUtils.getInstance().getStage());
         /**
          * TODO
          * BufferedWriter.write -> [DecryptionVerificationStatus] this.status.getOriginal
          */
-
     }
 
 
