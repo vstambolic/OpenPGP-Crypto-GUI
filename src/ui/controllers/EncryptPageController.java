@@ -151,6 +151,7 @@ public class EncryptPageController {
          Sender sender = new Sender(this.file,this.outputDirectory, this.compressCheckbox.isSelected(),this.radix64Checkbox.isSelected(),this.encryptCheckbox.isSelected(),(int)this.symmetricAlgorithm.getSelectedToggle().getUserData(),(PublicKeyInfo) this.publicKeyComboBox.getValue(),this.signCheckbox.isSelected(),this.passphraseField.getText(),(SecretKeyInfo) this.secretKeyComboBox.getValue());
         try {
             sender.send();
+            this.statusLabel.setText(this.encryptCheckbox.isSelected() && this.signCheckbox.isSelected() ? "Encryption succeeded" : "Signing succeeded");
         } catch (Exception e) {
             this.statusLabel.setText(e.getMessage());
         }

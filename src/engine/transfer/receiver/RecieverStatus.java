@@ -11,6 +11,22 @@ public class RecieverStatus {
     private boolean verificationApplied;
     private boolean verificationSucceeded;
 
+    public boolean isDecryptionApplied() {
+        return decryptionApplied;
+    }
+
+    public boolean isVerificationApplied() {
+        return verificationApplied;
+    }
+
+    public boolean isDecryptionSucceeded() {
+        return decryptionSucceeded;
+    }
+
+    public boolean isVerificationSucceeded() {
+        return verificationSucceeded;
+    }
+
     public void setDecryptionApplied(boolean decryptionApplied) {
         this.decryptionApplied = decryptionApplied;
     }
@@ -30,6 +46,14 @@ public class RecieverStatus {
     private Date verificationDate;
     private KeyInfo signerKeyInfo;
     private KeyInfo encryptorKeyInfo;
+
+    public KeyInfo getSignerKeyInfo() {
+        return signerKeyInfo;
+    }
+
+    public void setSignerKeyInfo(KeyInfo signerKeyInfo) {
+        this.signerKeyInfo = signerKeyInfo;
+    }
 
     public StringBuilder stringBuilder = new StringBuilder();
 
