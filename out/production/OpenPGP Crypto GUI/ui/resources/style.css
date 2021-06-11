@@ -63,17 +63,13 @@
     -fx-padding: 0px;
 }
 
-
-
-/*** ENCRYPT STYLE ***/
+/*** ENCRYPT/SIGN STYLE ***/
 
 .combo-box-encrypt {
     -fx-background-color: transparent;
     /*-fx-border-color: #3278E8;*/
     -fx-padding: 0px;
     -fx-cursor: hand;
-
-
 }
 .combo-box-encrypt .list-cell{
     -fx-border-color: #3278E8;
@@ -200,9 +196,6 @@
     -fx-text-fill: white;
 }
 
-
-
-
 .table-view {
     -fx-background-color: transparent;
     -fx-padding: 0em;
@@ -233,8 +226,6 @@
     -fx-border-color: #52A9A4;
     -fx-padding: 0em;
     -fx-alignment: center;
-
-
 }
 
 .table-row-cell{
@@ -246,12 +237,6 @@
 .table-row-cell:selected .table-cell {
     -fx-text-fill: #52A9A4;
 }
-
-/*.table-row-cell:selected {*/
-/*    -fx-background-color: #52A9A4;*/
-/*    -fx-background-insets: 0;*/
-/*    -fx-text-fill: black;*/
-/*}*/
 
 .table-view > .virtual-flow > .scroll-bar:vertical,
 .table-view > .virtual-flow > .scroll-bar:vertical > .track,
@@ -310,24 +295,7 @@
     -fx-text-fill: #52A9A4;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /**- DECRYPT/VERIFY STYLE ***/
-
-
 
 .decryptVerify-subheader {
     -fx-border-style: hidden  hidden solid hidden;

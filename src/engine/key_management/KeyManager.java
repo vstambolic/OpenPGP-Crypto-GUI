@@ -376,12 +376,13 @@ public class KeyManager {
         Iterator<PGPPublicKey> it = pkr.getPublicKeys();
         it.next();
         return it.next();
-//        while (it.hasNext()) {
-//            PGPPublicKey pk = it.next();
-//            if (pk.isEncryptionKey())
-//                return pk;
-//        }
-//      return null;
+/*
+        while (it.hasNext()) {
+            PGPPublicKey pk = it.next();
+            if (pk.isEncryptionKey())
+                return pk;
+        }
+      return null;*/
     }
 
 

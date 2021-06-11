@@ -29,7 +29,6 @@ public abstract class KeyInfo {
     }
 
     public String getKeyId() {
-        // Long.toHexString(this.keyId).toUpperCase();
         return formatKeyId(keyId);
     }
 
@@ -54,8 +53,7 @@ public abstract class KeyInfo {
         if (matcher.find()) {
             this.setUsername(matcher.group(1));
             this.setEmail(matcher.group(2));
-        }
-        else {
+        } else {
             this.setUsername(userId);
             this.setEmail("");
         }
@@ -63,10 +61,12 @@ public abstract class KeyInfo {
 
     @Override
     public String toString() {
-        return username + "[0x" + formatKeyId(keyId).substring(8)+ "]";
+        return username + "[0x" + formatKeyId(keyId).substring(8) + "]";
     }
 
-
+    public String toStringPretty() {
+        return username + "<" + email + "> " + "[0x" + formatKeyId(this.keyId) + "]";
+    }
 
     private static String formatKeyId(long keyId) {
         return String.format("%016X", keyId);

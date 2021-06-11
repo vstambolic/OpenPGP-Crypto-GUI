@@ -63,7 +63,7 @@
                         <HBox prefHeight="29.0" prefWidth="397.0">
                            <children>
                               <Label prefHeight="40.0" prefWidth="90.0" styleClass="text" text="Chosen File:" />
-                              <Label fx:id="chosenFileLabel" prefHeight="40.0" prefWidth="308.0" styleClass="text" text="None" />
+                              <Label fx:id="chosenFileLabel" prefHeight="40.0" prefWidth="308.0" styleClass="text" text="None." />
                            </children>
                         </HBox>
                         <AnchorPane>
@@ -118,7 +118,7 @@
                                 </Label>
                         <VBox fx:id="decryptionVBox" disable="true" prefHeight="123.0" prefWidth="400.0">
                            <children>
-                              <Label prefHeight="31.0" prefWidth="131.0" text="Decryption:">
+                              <Label prefHeight="22.0" prefWidth="207.0" text="Decryption status:">
                                  <font>
                                     <Font size="20.0" />
                                  </font>
@@ -134,16 +134,11 @@
                                  </padding>
                               </Label>
                               <Label fx:id="decryptionStatusMessage" alignment="TOP_LEFT" prefHeight="99.0" prefWidth="400.0" styleClass="text" text="-" />
-                              <ButtonBar prefHeight="40.0" prefWidth="200.0">
-                                <buttons>
-                                  <Button fx:id="saveDecryptedFileButton" mnemonicParsing="false" onAction="#saveDecryptedFile" styleClass="decryptVerify-button" text="Save Decrypted File" />
-                                </buttons>
-                              </ButtonBar>
                            </children>
                         </VBox>
                         <VBox fx:id="verificationVBox" disable="true" prefHeight="123.0" prefWidth="400.0">
                            <children>
-                              <Label prefHeight="31.0" prefWidth="131.0" text="Verification:">
+                              <Label prefHeight="40.0" prefWidth="193.0" text="Verification status:">
                                  <font>
                                     <Font size="20.0" />
                                  </font>
@@ -158,7 +153,7 @@
                                     <Insets bottom="10.0" />
                                  </padding>
                               </Label>
-                              <Label fx:id="verificationStatusMessage" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="400.0" styleClass="text" text="-" />
+                              <Label fx:id="verificationStatusMessage" alignment="TOP_LEFT" prefHeight="80.0" prefWidth="400.0" styleClass="text" text="-" />
                            </children>
                         </VBox>
                             </children>
@@ -170,7 +165,13 @@
                 </HBox>
                 <HBox>
                     <children>
-                        <HBox alignment="TOP_RIGHT" prefHeight="35.0" prefWidth="643.0" />
+                        <HBox alignment="TOP_RIGHT" prefHeight="40.0" prefWidth="453.0" />
+                  <Label fx:id="saveOriginalFileStatusLabel" prefHeight="40.0" prefWidth="220.0" styleClass="text" />
+                  <ButtonBar prefHeight="40.0" prefWidth="200.0">
+                     <buttons>
+                        <Button fx:id="saveOriginalFileButton" disable="true" mnemonicParsing="false" onAction="#saveOriginalFile" styleClass="decryptVerify-button" text="Save Original File" />
+                     </buttons>
+                  </ButtonBar>
                     </children>
                 </HBox>
             </children>

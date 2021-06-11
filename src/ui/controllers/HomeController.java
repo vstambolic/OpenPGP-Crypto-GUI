@@ -23,8 +23,12 @@ public class HomeController {
     @FXML
     private ImageView imageViewKeys;
 
+    private static boolean welcomeShown = false;
+
     @FXML
     private void initialize() {
+        if (welcomeShown)
+            this.hide(null);
         imageViewLocked.setImage(new Image(getClass().getResource("..\\resources\\icons\\locked.png").toExternalForm()));
         imageViewKeys.setImage(new Image(getClass().getResource("..\\resources\\icons\\keys.png").toExternalForm()));
         imageViewUnlocked.setImage(new Image(getClass().getResource("..\\resources\\icons\\unlocked.png").toExternalForm()));
@@ -43,7 +47,7 @@ public class HomeController {
     private void hide(MouseEvent event) {
         this.welcome.setVisible(false);
         this.home.setVisible(true);
-        System.out.println("siso");
+        welcomeShown=true;
     }
 
     @FXML

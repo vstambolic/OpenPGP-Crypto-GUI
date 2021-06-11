@@ -71,7 +71,7 @@
                            <children>
                               <ButtonBar prefHeight="60.0" prefWidth="400.0">
                                 <buttons>
-                                  <Button mnemonicParsing="false" onAction="#showPublicKey" styleClass="button-keyManagement" text="Show" />
+                                  <Button mnemonicParsing="false" onAction="#showPublicKey" styleClass="button-keyManagement" text="Show" visible="false" />
                                     <Button layoutX="335.0" layoutY="48.0" mnemonicParsing="false" onAction="#deletePublicKey" styleClass="button-keyManagement" text="Delete" />
                                     <Button layoutX="335.0" layoutY="48.0" mnemonicParsing="false" onAction="#exportPublicKey" styleClass="button-keyManagement" text="Export" />
                                     <Button layoutX="335.0" layoutY="48.0" mnemonicParsing="false" onAction="#importKeys" styleClass="button-keyManagement" text="Import" />
@@ -115,7 +115,7 @@
                            <children>
                               <ButtonBar prefHeight="60.0" prefWidth="400.0">
                                  <buttons>
-                                    <Button mnemonicParsing="false" onAction="#showSecretKey" styleClass="button-keyManagement" text="Show" />
+                                    <Button mnemonicParsing="false" onAction="#showSecretKey" styleClass="button-keyManagement" text="Show" visible="false" />
                                     <Button layoutX="335.0" layoutY="48.0" mnemonicParsing="false" onAction="#deleteSecretKey" styleClass="button-keyManagement" text="Delete" />
                                     <Button layoutX="335.0" layoutY="48.0" mnemonicParsing="false" onAction="#exportSecretKey" styleClass="button-keyManagement" text="Export" />
                                     <Button layoutX="335.0" layoutY="48.0" mnemonicParsing="false" onAction="#importKeys" styleClass="button-keyManagement" text="Import" />

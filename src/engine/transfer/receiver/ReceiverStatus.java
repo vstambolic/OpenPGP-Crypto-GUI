@@ -2,14 +2,31 @@ package engine.transfer.receiver;
 
 import engine.key_management.entities.KeyInfo;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Date;
 
-public class RecieverStatus {
+public class ReceiverStatus {
 
     private boolean decryptionApplied;
     private boolean decryptionSucceeded;
     private boolean verificationApplied;
     private boolean verificationSucceeded;
+    private Date signatureDate;
+
+
+    private KeyInfo signerKeyInfo;
+    private KeyInfo encryptorKeyInfo;
+
+    public KeyInfo getEncryptorKeyInfo() {
+        return encryptorKeyInfo;
+    }
+
+    public void setEncryptorKeyInfo(KeyInfo encryptorKeyInfo) {
+        this.encryptorKeyInfo = encryptorKeyInfo;
+    }
 
     public boolean isDecryptionApplied() {
         return decryptionApplied;
@@ -43,10 +60,6 @@ public class RecieverStatus {
         this.verificationSucceeded = verificationSucceeded;
     }
 
-    private Date verificationDate;
-    private KeyInfo signerKeyInfo;
-    private KeyInfo encryptorKeyInfo;
-
     public KeyInfo getSignerKeyInfo() {
         return signerKeyInfo;
     }
@@ -55,13 +68,24 @@ public class RecieverStatus {
         this.signerKeyInfo = signerKeyInfo;
     }
 
-    public StringBuilder stringBuilder = new StringBuilder();
 
-    public void appendMessage(char chr) {
+    public void setSignatureDate(Date date) {
+        this.signatureDate = date;
+    }
+    public Date getSignatureDate() {
+        return this.signatureDate;
+    }
+
+
+    private StringBuilder stringBuilder = new StringBuilder();
+
+    public void appendChar(char chr) {
         stringBuilder.append(chr);
     }
 
-    public void setVerificationDate(Date date) {
-        this.verificationDate = date;
+    public void exportOriginalMessage(File file) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+        writer.write(this.stringBuilder.toString());
+        writer.close();
     }
 }

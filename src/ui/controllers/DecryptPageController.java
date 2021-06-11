@@ -1,12 +1,9 @@
 package ui.controllers;
 
-import engine.key_management.entities.PublicKeyInfo;
+import engine.key_management.entities.KeyInfo;
 import engine.transfer.receiver.Receiver;
-import engine.transfer.receiver.RecieverStatus;
-import engine.transfer.receiver.exception.InvalidFileFormatException;
-import engine.transfer.receiver.exception.InvalidPassprhaseException;
-import engine.transfer.receiver.exception.KeyNotFoundException;
-import engine.transfer.receiver.exception.PassphraseRequiredException;
+import engine.transfer.receiver.ReceiverStatus;
+import engine.transfer.receiver.exception.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -19,18 +16,14 @@ import javafx.stage.FileChooser;
 import org.bouncycastle.openpgp.PGPException;
 import ui.utils.UIUtils;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 
 public class DecryptPageController {
 
-
     private File file;
-    private FileChooser fileChooser = generateFileChooser();
-    private FileChooser saveFileChooser = generateSaveFileChooser();
-    private RecieverStatus status;
+    private final FileChooser fileChooser = generateFileChooser();
+    private final FileChooser saveFileChooser = generateSaveFileChooser();
 
     private static FileChooser generateSaveFileChooser() {
         FileChooser fileChooser = new FileChooser();
@@ -75,7 +68,10 @@ public class DecryptPageController {
     private Label decryptionStatusMessage;
 
     @FXML
-    private Button saveDecryptedFileButton;
+    private Button saveOriginalFileButton;
+
+    @FXML
+    private Label saveOriginalFileStatusLabel;
 
     @FXML
     private VBox verificationVBox;
@@ -96,105 +92,119 @@ public class DecryptPageController {
             this.chosenFileLabel.setText(this.file.getAbsolutePath());
             decryptVerifyButton.setDisable(false);
         }
+        this.clear();
+
+    }
+
+    public void clear() {
+        this.passphraseField.clear();
+        this.passphraseVBox.setVisible(false);
+        this.passphraseField.setDisable(false);
+
+        this.decryptionStatusMessage.setText("-");
+        this.decryptionVBox.setDisable(true);
+
+        this.verificationStatusMessage.setText("-");
+        this.verificationVBox.setDisable(true);
+
+        this.saveOriginalFileButton.setDisable(true);
+
+        this.saveOriginalFileStatusLabel.setText("");
+
     }
 
     @FXML
     private void decryptVerify(ActionEvent event) {
+        this.decryptVerifyButton.setDisable(true);
         try {
             this.receiver = new Receiver(this.file);
         } catch (IOException e) {
-            decryptionStatusMessage.setText("Invalid file format");
+            this.decryptionVBox.setDisable(false);
+            this.decryptionStatusMessage.setText("Decryption failed: Invalid file format.");
             return;
         }
+        this.receive();
+    }
+
+    private void receive() {
         try {
             receiver.receive();
-            this.status = receiver.getRecieverStatus();
-            if(this.status.isDecryptionApplied()){
-                decryptionVBox.setVisible(true);
-                decryptionVBox.setDisable(false);
-                if(this.status.isDecryptionSucceeded()){
-                    decryptionStatusMessage.setText("Decryption succeeded");
-                    this.saveDecryptedFileButton.setDisable(false);
-                }else{
-                    decryptionStatusMessage.setText("Decryption failed");
-                }
-            }
-            if(this.status.isVerificationApplied()){
-                verificationVBox.setVisible(true);
-                verificationVBox.setDisable(false);
-                if(this.status.isVerificationSucceeded()){
-                    PublicKeyInfo signerInfo = (PublicKeyInfo) receiver.getRecieverStatus().getSignerKeyInfo();
-                    verificationStatusMessage.setText(String.format("%s <%s> %s", signerInfo.getUsername(), signerInfo.getEmail(), signerInfo.getKeyId()));
-                    this.saveDecryptedFileButton.setDisable(false);
-                }else{
-                    verificationStatusMessage.setText("Verification failed");
-                }
-            }
-        } catch (InvalidPassprhaseException e) {
-            decryptionStatusMessage.setText("Invalid Passphrase");
+        } catch (InvalidPassphraseException e) {
+            this.decryptionVBox.setDisable(false);
+            decryptionStatusMessage.setText("Decryption failed: Invalid Passphrase.");
+            this.passphraseField.setDisable(false);
+            return;
         } catch (PassphraseRequiredException e) {
+            decryptionStatusMessage.setText("Decryption failed: Sender's key is protected with passphrase.");
             this.keyIdLabel.setText(e.getKeyIdHexString());
             this.passphraseVBox.setVisible(true);
+            return;
         } catch (KeyNotFoundException e) {
-            decryptionStatusMessage.setText("Public key was not found in key ring!");
+            this.decryptionVBox.setDisable(false);
+            decryptionStatusMessage.setText("Decryption failed: Unknown sender.\nEncryption key ID: " + e.getKeyIdHexString());
+            return;
         } catch (IOException | PGPException | InvalidFileFormatException e) {
-            decryptionStatusMessage.setText("Unexpected error occurred!");
+            this.decryptionVBox.setDisable(false);
+            decryptionStatusMessage.setText("Decryption failed: Unexpected error occurred.");
+            return;
+        } catch (SignerKeyNotFoundException e) {
+            verificationVBox.setDisable(false);
+            verificationStatusMessage.setText("Verification failed.\nUnknown signer with key id: "
+                    + e.getKeyIdHexString()
+                    + "\nSignature created on: " + this.receiver.getReceiverStatus().getSignatureDate());
         }
 
+        ReceiverStatus receiverStatus = receiver.getReceiverStatus();
+        if (receiverStatus.isDecryptionApplied()) {
+            decryptionVBox.setDisable(false);
+            if (receiverStatus.isDecryptionSucceeded()) {
+                KeyInfo encryptorKeyInfo = receiverStatus.getEncryptorKeyInfo();
+                decryptionStatusMessage.setText("Decryption succeeded!\nEncryptor info: " + encryptorKeyInfo.toStringPretty());
+                this.saveOriginalFileButton.setDisable(false);
+            } else {
+                decryptionStatusMessage.setText("Decryption failed: Unexpected error occurred.");
+            }
+        }
+        if (receiverStatus.isVerificationApplied()) {
+            verificationVBox.setDisable(false);
+            if (receiverStatus.isVerificationSucceeded()) {
+                verificationVBox.setDisable(false);
+                verificationStatusMessage.setText("Verification succeeded - Signature is valid!\nSigner info: "
+                        + receiverStatus.getSignerKeyInfo().toStringPretty()
+                        + "\nSignature created on: " + receiverStatus.getSignatureDate());
 
-/*
-    TODO
-    DecryptionVerificationStatus status = DecryptorVerifier.action(this.file);
-    u zavisnosti od statusa postaviti odgovarajucu poruku
-    Decryption:
-        decryptionVBox.setVisible(true);
-        decryptionStatusMessage.setText("...")
-            -> Decryption succeeded.  (this.saveDecryptedFileButton.setDisabled(false)
-            -> Decryption failed (public key KEYID isn't contained in public key ring)  (this.saveDecryptedFileButton.setDisabled(true)
-            -> Decryption error (this.saveDecryptedFileButton.setDisabled(true)
-    Verification:
-        verificationVBox.setVisible(true);
-        verificationStatusMessage.setText("...")
-            -> Verification succeded
-                -> Signer : username <email> KEYID
-            -> Verification failed (public key KEYID isn't contained in pkr)
-                -> Signer : username <email> KEYID
-            -> Verification error
-                -> Couldn't find original file
-                -> Other error
- */
+                this.saveOriginalFileButton.setDisable(false);
+            } else {
+                if (receiverStatus.getSignerKeyInfo() != null)
+                    verificationStatusMessage.setText("Verification failed - Signature is invalid!\nSigner info: "
+                            + receiverStatus.getSignerKeyInfo().toStringPretty()
+                            + "\nSignature created on: " + this.receiver.getReceiverStatus().getSignatureDate());
+                else
+                    verificationStatusMessage.setText("Verification failed - Signature is invalid!\nSignature created on: "
+                            + this.receiver.getReceiverStatus().getSignatureDate());
+            }
+        }
     }
 
     @FXML
     void passphraseEnteredAction(ActionEvent event) {
+        this.passphraseField.setDisable(true);
         this.receiver.setPassphrase(this.passphraseField.getText());
-        try {
-            this.receiver.decrypt();
-        } catch (InvalidPassprhaseException | PassphraseRequiredException e) {
-            // TODO INVALID PASSWORD
-            decryptionStatusMessage.setText("Invalid Passphrase");
-            System.out.println("invalid pass");
-        } catch (Exception e) {
-            // TODO INVALID FILE FORMAT
-            decryptionStatusMessage.setText("Invalid file format");
-            System.out.println("invalid file format");
-        }
-
+        this.receive();
     }
 
 
     @FXML
-    private void saveDecryptedFile(ActionEvent event) {
+    private void saveOriginalFile(ActionEvent event) {
         File file = saveFileChooser.showSaveDialog(UIUtils.getInstance().getStage());
-        try(BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-            writer.write(this.status.stringBuilder.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        /**
-         * TODO
-         * BufferedWriter.write -> [DecryptionVerificationStatus] this.status.getOriginal
-         */
+        if (file != null)
+            try {
+                this.receiver.getReceiverStatus().exportOriginalMessage(file);
+                this.saveOriginalFileStatusLabel.setText("Successfully saved original file.");
+            }
+            catch (IOException e) {
+                this.saveOriginalFileStatusLabel.setText("Couldn't save original file.");
+            }
     }
 
 
@@ -202,6 +212,7 @@ public class DecryptPageController {
     private void backAction(ActionEvent event) {
         UIUtils.getInstance().switchPages("..\\resources\\home.fxml");
     }
+
     @FXML
     private void initialize() {
         imageViewBack.setImage(new Image(getClass().getResource("..\\resources\\icons\\backRed.png").toExternalForm()));

@@ -2,34 +2,33 @@ package engine.transfer.receiver;
 
 import engine.key_management.KeyManager;
 import engine.key_management.entities.PublicKeyInfo;
-import engine.transfer.receiver.exception.InvalidFileFormatException;
-import engine.transfer.receiver.exception.InvalidPassprhaseException;
-import engine.transfer.receiver.exception.KeyNotFoundException;
-import engine.transfer.receiver.exception.PassphraseRequiredException;
+import engine.key_management.entities.SecretKeyInfo;
+import engine.transfer.receiver.exception.*;
 import org.bouncycastle.openpgp.*;
 import org.bouncycastle.openpgp.operator.bc.BcKeyFingerprintCalculator;
 import org.bouncycastle.openpgp.operator.bc.BcPGPContentVerifierBuilderProvider;
 import org.bouncycastle.openpgp.operator.bc.BcPublicKeyDataDecryptorFactory;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Date;
 import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
 
 public class Receiver {
-    private static final int BUFFER_SIZE = 1024;
-    // Utils
-    private static BcKeyFingerprintCalculator KEY_FINGERPRINT_CALCULATOR = new BcKeyFingerprintCalculator();
 
+    private static BcKeyFingerprintCalculator KEY_FINGERPRINT_CALCULATOR = new BcKeyFingerprintCalculator();
 
     private PGPObjectFactory objectFactory;
     private Object currObject;
     private String passphrase = "";
     private PGPSecretKey secretMasterKey;
-    private PGPSecretKey secretSubkey;
+    private PGPSecretKey secretSubKey;
     private PGPPublicKeyEncryptedData encryptedData;
-    private RecieverStatus status = new RecieverStatus();
+    private ReceiverStatus status = new ReceiverStatus();
     private File file;
 
-    public RecieverStatus getRecieverStatus(){return status;}
 
     public void setPassphrase(String passphrase) {
         this.passphrase = passphrase;
@@ -42,62 +41,57 @@ public class Receiver {
         this.currObject = this.objectFactory.nextObject();
     }
 
-    public void receive() throws KeyNotFoundException, PassphraseRequiredException, InvalidPassprhaseException, IOException, PGPException, InvalidFileFormatException {
+    public void receive() throws KeyNotFoundException, PassphraseRequiredException, InvalidPassphraseException, IOException, PGPException, InvalidFileFormatException, SignerKeyNotFoundException {
 
         if (currObject instanceof PGPEncryptedDataList) {
+            if (!this.status.isDecryptionApplied()) {
+                this.status.setDecryptionApplied(true);
 
-            PGPEncryptedDataList dataList = (PGPEncryptedDataList) currObject;
-            this.encryptedData = (PGPPublicKeyEncryptedData) dataList.get(0);
+                PGPEncryptedDataList dataList = (PGPEncryptedDataList) currObject;
+                this.encryptedData = (PGPPublicKeyEncryptedData) dataList.get(0);
 
-            PGPSecretKeyRing skrskr = null;
-            try {
-                skrskr = KeyManager.getSecretKeyRing(encryptedData.getKeyID());
-                final Iterator<PGPSecretKey> secretKeys = skrskr.getSecretKeys();
-                this.secretMasterKey = secretKeys.next();
-                this.secretSubkey = secretKeys.next();
+                PGPSecretKeyRing skrskr = null;
+                try {
+                    skrskr = KeyManager.getSecretKeyRing(encryptedData.getKeyID());
+                    final Iterator<PGPSecretKey> secretKeys = skrskr.getSecretKeys();
+                    this.secretMasterKey = secretKeys.next();
+                    this.secretSubKey = secretKeys.next();
+                } catch (NullPointerException | PGPException e) {
+                    throw new KeyNotFoundException(encryptedData.getKeyID());
+                }
+                this.status.setEncryptorKeyInfo(new SecretKeyInfo(this.secretMasterKey));
 
-            } catch (PGPException e) {
-                throw new KeyNotFoundException(encryptedData.getKeyID());
+                if (KeyManager.isEncrypted(this.secretSubKey))
+                    throw new PassphraseRequiredException(this.secretMasterKey.getKeyID());
             }
-
-            if (KeyManager.isEncrypted(this.secretSubkey))
-                throw new PassphraseRequiredException(this.secretMasterKey.getKeyID());
             this.decrypt();
-            return;
         }
         if (this.currObject instanceof PGPCompressedData)
             this.decompress();
-        if (this.currObject instanceof PGPOnePassSignatureList)
-            this.verify();
-        else
-            throw new InvalidFileFormatException();
-    }
-
-    public void decrypt() throws PassphraseRequiredException, InvalidPassprhaseException, IOException, PGPException, InvalidFileFormatException, KeyNotFoundException {
-        if (KeyManager.isEncrypted(this.secretSubkey) && this.passphrase == null)
-            throw new PassphraseRequiredException(this.secretMasterKey.getKeyID());
-
-        PGPPrivateKey privateKey = null;
-        try {
-            privateKey = KeyManager.extractPrivateKey(this.secretSubkey, this.passphrase);
-        } catch (PGPException e) {
-            throw new InvalidPassprhaseException(this.secretMasterKey.getKeyID());
-        }
-
-        // Decryption
-        InputStream plainStream  = this.encryptedData.getDataStream(new BcPublicKeyDataDecryptorFactory(privateKey));
-        this.objectFactory = new PGPObjectFactory(plainStream, KEY_FINGERPRINT_CALCULATOR);
-        this.currObject = objectFactory.nextObject();
-        this.status.setDecryptionApplied(true);
-        if (this.currObject instanceof PGPCompressedData)
-            this.decompress();
-
         if (this.currObject instanceof PGPOnePassSignatureList)
             this.verify();
         else if (this.currObject instanceof PGPLiteralData)
             this.read();
         else
             throw new InvalidFileFormatException();
+    }
+
+    public void decrypt() throws PassphraseRequiredException, InvalidPassphraseException, IOException, PGPException, InvalidFileFormatException, SignerKeyNotFoundException {
+        if (KeyManager.isEncrypted(this.secretSubKey) && this.passphrase == null)
+            throw new PassphraseRequiredException(this.secretMasterKey.getKeyID());
+
+        PGPPrivateKey privateKey = null;
+        try {
+            privateKey = KeyManager.extractPrivateKey(this.secretSubKey, this.passphrase);
+        } catch (PGPException e) {
+            throw new InvalidPassphraseException(this.secretMasterKey.getKeyID());
+        }
+
+        // Decryption
+        InputStream plainStream = this.encryptedData.getDataStream(new BcPublicKeyDataDecryptorFactory(privateKey));
+        this.status.setDecryptionSucceeded(true);
+        this.objectFactory = new PGPObjectFactory(plainStream, KEY_FINGERPRINT_CALCULATOR);
+        this.currObject = objectFactory.nextObject();
 
     }
 
@@ -108,17 +102,24 @@ public class Receiver {
     }
 
     private void read() throws IOException {
-        InputStream literalStream = ((PGPLiteralData)currObject).getInputStream();
+        InputStream literalStream = ((PGPLiteralData) currObject).getInputStream();
         int ch;
         while ((ch = literalStream.read()) >= 0)
-            this.status.appendMessage((char)ch);
-
-        System.out.println(this.status.stringBuilder);
+            this.status.appendChar((char) ch);
     }
 
-    private void verify() throws KeyNotFoundException {
+    private void verify() throws SignerKeyNotFoundException {
         this.status.setVerificationApplied(true);
-//        this.status.setVerificationDate();  ... file.getcreationdate()
+        try {
+            this.status.setSignatureDate(new Date(
+                            Files.readAttributes(this.file.toPath(), BasicFileAttributes.class)
+                                    .creationTime()
+                                    .to(TimeUnit.MILLISECONDS)
+                    )
+            );
+        } catch (IOException e) {
+            return;
+        }
         this.status.setDecryptionSucceeded(true);
         PGPOnePassSignatureList signatureList = (PGPOnePassSignatureList) this.currObject;
         PGPOnePassSignature signature = signatureList.get(0);
@@ -126,13 +127,11 @@ public class Receiver {
         try {
             signerPublicKey = KeyManager.getPublicKey(signature.getKeyID());
             this.status.setSignerKeyInfo(new PublicKeyInfo(signerPublicKey));
-        } catch (PGPException e) {
-            System.out.println("Unknown signer.");
-            throw new KeyNotFoundException(signature.getKeyID());
+        } catch (NullPointerException | PGPException e) {
+            throw new SignerKeyNotFoundException(signature.getKeyID());
         }
 
         try {
-
             signature.init(new BcPGPContentVerifierBuilderProvider(), signerPublicKey);
 
             PGPLiteralData literalData = null;
@@ -141,20 +140,21 @@ public class Receiver {
             int ch;
             while ((ch = literalStream.read()) >= 0) {
                 signature.update((byte) ch);
-                this.status.appendMessage((char)ch);
+                this.status.appendChar((char) ch);
             }
-
             PGPSignature verificationSignature = ((PGPSignatureList) objectFactory.nextObject()).get(0);
             boolean verificationStatus = signature.verify(verificationSignature);
             this.status.setVerificationSucceeded(verificationStatus);
-            System.out.println(verificationStatus);
 
-        } catch (Exception e) {
-            System.out.println("wut");
-            // TODO Verification failed, throw some shit
-            // Signature by -----> SignerKey
+        } catch (PGPException | IOException e) {
+            this.status.setVerificationSucceeded(false);
         }
 
     }
+
+    public ReceiverStatus getReceiverStatus() {
+        return status;
+    }
+
 
 }
