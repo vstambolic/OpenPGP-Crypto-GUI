@@ -1,6 +1,8 @@
 package ui.controllers;
 
+import engine.key_management.entities.PublicKeyInfo;
 import engine.transfer.receiver.Receiver;
+import engine.transfer.receiver.RecieverStatus;
 import engine.transfer.receiver.exception.InvalidFileFormatException;
 import engine.transfer.receiver.exception.InvalidPassprhaseException;
 import engine.transfer.receiver.exception.KeyNotFoundException;
@@ -17,7 +19,9 @@ import javafx.stage.FileChooser;
 import org.bouncycastle.openpgp.PGPException;
 import ui.utils.UIUtils;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 
 public class DecryptPageController {
@@ -26,6 +30,7 @@ public class DecryptPageController {
     private File file;
     private FileChooser fileChooser = generateFileChooser();
     private FileChooser saveFileChooser = generateSaveFileChooser();
+    private RecieverStatus status;
 
     private static FileChooser generateSaveFileChooser() {
         FileChooser fileChooser = new FileChooser();
@@ -98,22 +103,44 @@ public class DecryptPageController {
         try {
             this.receiver = new Receiver(this.file);
         } catch (IOException e) {
-            // TODO Invalid file format error
+            decryptionStatusMessage.setText("Invalid file format");
             return;
         }
         try {
             receiver.receive();
+            this.status = receiver.getRecieverStatus();
+            if(this.status.isDecryptionApplied()){
+                decryptionVBox.setVisible(true);
+                decryptionVBox.setDisable(false);
+                if(this.status.isDecryptionSucceeded()){
+                    decryptionStatusMessage.setText("Decryption succeeded");
+                    this.saveDecryptedFileButton.setDisable(false);
+                }else{
+                    decryptionStatusMessage.setText("Decryption failed");
+                }
+            }
+            if(this.status.isVerificationApplied()){
+                verificationVBox.setVisible(true);
+                verificationVBox.setDisable(false);
+                if(this.status.isVerificationSucceeded()){
+                    PublicKeyInfo signerInfo = (PublicKeyInfo) receiver.getRecieverStatus().getSignerKeyInfo();
+                    verificationStatusMessage.setText(String.format("%s <%s> %s", signerInfo.getUsername(), signerInfo.getEmail(), signerInfo.getKeyId()));
+                    this.saveDecryptedFileButton.setDisable(false);
+                }else{
+                    verificationStatusMessage.setText("Verification failed");
+                }
+            }
         } catch (InvalidPassprhaseException e) {
-            // TODO
+            decryptionStatusMessage.setText("Invalid Passphrase");
         } catch (PassphraseRequiredException e) {
             this.keyIdLabel.setText(e.getKeyIdHexString());
             this.passphraseVBox.setVisible(true);
         } catch (KeyNotFoundException e) {
-            // TODO
+            decryptionStatusMessage.setText("Public key was not found in key ring!");
         } catch (IOException | PGPException | InvalidFileFormatException e) {
-            // TODO Unexpected error
-            System.out.println("Invalid file format.");
+            decryptionStatusMessage.setText("Unexpected error occurred!");
         }
+
 
 /*
     TODO
@@ -145,9 +172,11 @@ public class DecryptPageController {
             this.receiver.decrypt();
         } catch (InvalidPassprhaseException | PassphraseRequiredException e) {
             // TODO INVALID PASSWORD
+            decryptionStatusMessage.setText("Invalid Passphrase");
             System.out.println("invalid pass");
         } catch (Exception e) {
             // TODO INVALID FILE FORMAT
+            decryptionStatusMessage.setText("Invalid file format");
             System.out.println("invalid file format");
         }
 
@@ -157,6 +186,11 @@ public class DecryptPageController {
     @FXML
     private void saveDecryptedFile(ActionEvent event) {
         File file = saveFileChooser.showSaveDialog(UIUtils.getInstance().getStage());
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            writer.write(this.status.stringBuilder.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         /**
          * TODO
          * BufferedWriter.write -> [DecryptionVerificationStatus] this.status.getOriginal
