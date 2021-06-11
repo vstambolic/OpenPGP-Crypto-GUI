@@ -147,30 +147,23 @@ public class EncryptPageController {
     }
 
     @FXML
-    private void exportAction(ActionEvent event) throws FileNotFoundException {
-         Sender sender = new Sender(this.file,this.outputDirectory, this.compressCheckbox.isSelected(),this.radix64Checkbox.isSelected(),this.encryptCheckbox.isSelected(),(int)this.symmetricAlgorithm.getSelectedToggle().getUserData(),(PublicKeyInfo) this.publicKeyComboBox.getValue(),this.signCheckbox.isSelected(),this.passphraseField.getText(),(SecretKeyInfo) this.secretKeyComboBox.getValue());
+    private void exportAction(ActionEvent event) {
+        Sender sender = new Sender(this.file,this.outputDirectory, this.compressCheckbox.isSelected(),this.radix64Checkbox.isSelected(),this.encryptCheckbox.isSelected(),(int)this.symmetricAlgorithm.getSelectedToggle().getUserData(),(PublicKeyInfo) this.publicKeyComboBox.getValue(),this.signCheckbox.isSelected(),this.passphraseField.getText(),(SecretKeyInfo) this.secretKeyComboBox.getValue());
         try {
             sender.send();
-        } catch (Exception e) {
+        } catch (RuntimeException | FileNotFoundException e) {
             this.statusLabel.setText(e.getMessage());
+            return;
         }
 
-        /**
-         * TODO
-         * U zavisnosti od izabrane opcije
-         *      -> Encryptor.encrypt (.gpg file)
-         *      -> Signer.sign (.sig file)
-         *      -> EncryptorSigner.encryptSign (.gpg file)
-         * statusLabel.setText("")
-         *      -> Encryption succeeded.
-         *      -> Signing succeeded
-         *      -> Encryption failed
-         *      -> Invalid passphrase for secret key
-         *      -> Public/Secret key not chosen
-         *
-         */
+        if (this.signCheckbox.isSelected() && this.encryptCheckbox.isSelected())
+            this.statusLabel.setText("Encryption/Signing succeeded.");
+        else
+            if (this.encryptCheckbox.isSelected())
+                this.statusLabel.setText("Encryption succeeded.");
+            else
+                this.statusLabel.setText("Signing succeeded.");
     }
-
 
     @FXML
     private void initialize() {

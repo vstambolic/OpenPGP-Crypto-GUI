@@ -35,7 +35,6 @@ public class Receiver {
     public Receiver(File file) throws IOException {
         this.objectFactory = new PGPObjectFactory(PGPUtil.getDecoderStream(new FileInputStream(this.file = file)), KEY_FINGERPRINT_CALCULATOR);
         this.currObject = this.objectFactory.nextObject();
-        System.out.println("currObject is " + currObject);
     }
 
     public void receive() throws KeyNotFoundException, PassphraseRequiredException, InvalidPassprhaseException, IOException, PGPException, InvalidFileFormatException {

@@ -374,12 +374,14 @@ public class KeyManager {
     public static PGPPublicKey getPublicSubkey(long keyIdLong) throws PGPException {
         PGPPublicKeyRing pkr = PUBLIC_KEY_RINGS.getPublicKeyRing(keyIdLong);
         Iterator<PGPPublicKey> it = pkr.getPublicKeys();
-        while (it.hasNext()) {
-            PGPPublicKey pk = it.next();
-            if (pk.isEncryptionKey())
-                return pk;
-        }
-        return null;
+        it.next();
+        return it.next();
+//        while (it.hasNext()) {
+//            PGPPublicKey pk = it.next();
+//            if (pk.isEncryptionKey())
+//                return pk;
+//        }
+//      return null;
     }
 
 
