@@ -1,8 +1,8 @@
 ## OpenPGP Crypto GUI
-An interactive GUI application which implements the Open PGP protocol. All of the functionalities are implemented according to the [RFC 4480](https://datatracker.ietf.org/doc/html/rfc4880) standard. The application is fully compatible with other applications that support Open PGP protocol (e.g., [GnuPG Kleopatra](https://www.openpgp.org/software/kleopatra/)).
+An interactive GUI application which implements the Open PGP protocol. All of the functionalities are implemented according to the [RFC 4480](https://datatracker.ietf.org/doc/html/rfc4880) standard. The application is fully compatible with other applications based on the Open PGP protocol (e.g., [GnuPG Kleopatra](https://www.openpgp.org/software/kleopatra/)).
 
 Supported asymmetric cryptography algorithms:
-- DSA with 1024/2048-bit keys  for signing and ElGamal with 1024/2048/4096-bit keys for encryption
+- DSA with 1024/2048-bit keys for signing and ElGamal with 1024/2048/4096-bit keys for encryption
 
 Supported symmetric cryptography algorithms:
 - Triple DES with EDE configuration and 3 keys 
